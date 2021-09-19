@@ -6,3 +6,6 @@ I was hoping that the greedy shirtheads responsible for this action would have a
 Anyway, so far I've had no luck getting my radio to work. I have set up a "Deadwood" DNS server to redirect the radios startup requests to my server but so far all I've received are "HEAD" requests, no GETs. As I don't have a working server it's going to be a tough job figuring out what the radio is expecting in response to the HEAD request.
 
 But at least I now have a framework of a web application...
+
+All I need to do is figure out how the hell I get it into GitHub - it worked last time I used but now it seems
+to be completely forked up!
