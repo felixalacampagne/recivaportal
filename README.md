@@ -17,7 +17,7 @@ To get GitHub to work again I had to:
 - search for SSH in Eclipse-Preferences: Select the General>Network Connections>SSH. Set the SSH directory to point to the
   location of the public/provate keys.
 - use the SSH URL provided by GitHub>Code button>Clone>SSH to pull into the local project - make sure any "save settings"
-  checkboxes are checked!
+  checkboxes are checked! DO NOT change the username to the real username - keep the one provided in the clone url.
 - Push to remote - fingers crossed Eclipse will use the SSH private key and GitHub will accept it. There will probably be
   be quite a few popups containing completely incomprehensible stuff - click OK or Next and keep fingers crossed that
   it works and that they wont appear next time. Best to test on a simple readme update before relying on it for real stuff.
