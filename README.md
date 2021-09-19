@@ -7,5 +7,17 @@ Anyway, so far I've had no luck getting my radio to work. I have set up a "Deadw
 
 But at least I now have a framework of a web application...
 
-All I need to do is figure out how the hell I get it into GitHub - it worked last time I used but now it seems
-to be completely forked up!
+All I need to do is figure out how the hell I get it into GitHub - seems GitHub ate my SSH key. What goes through these peoples minds
+when they just decide to arbitrarily delete settings which took hours to figure out the first time, and then take hours and hours to
+figure out why they aren't working and yet more hours to figure out how to get them to work again? I guess I know the answer to this one  - they are just having one great big forking enormous laugh at the thought of all the time wasted due to their ridiculous actions...
+
+To get GitHub to work again I had to:
+- remember where I put the SSH keys 
+- reload the public key into GitHub
+- search for SSH in Eclipse-Preferences: Select the General>Network Connections>SSH. Set the SSH directory to point to the
+  location of the public/provate keys.
+- use the SSH URL provided by GitHub>Code button>Clone>SSH to pull into the local project - make sure any "save settings"
+  checkboxes are checked!
+- Push to remote - fingers crossed Eclipse will use the SSH private key and GitHub will accept it. There will probably be
+  be quite a few popups containing completely incomprehensible stuff - click OK or Next and keep fingers crossed that
+  it works and that they wont appear next time. Best to test on a simple readme update before relying on it for real stuff.
