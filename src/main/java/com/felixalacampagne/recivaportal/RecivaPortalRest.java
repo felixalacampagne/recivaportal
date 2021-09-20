@@ -25,7 +25,7 @@ public class RecivaPortalRest
 	final Logger log = LoggerFactory.getLogger(this.getClass());
    @GET
    @Path("/challenge")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_OCTET_STREAM)
    public Response getChallenge(@QueryParam("serial") String serial, @QueryParam("sp") String sp)
    {
    	log.info("getChallenge: serial:" + serial + " sp:" + sp);
@@ -35,7 +35,7 @@ public class RecivaPortalRest
    
    @HEAD
    @Path("/challenge")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_OCTET_STREAM)
    public Response getHeadChallenge(@QueryParam("serial") String serial, @QueryParam("sp") String sp)
    {
    	// HEAD response should only return the Headers which would be returned by the equivalent GET request.
@@ -75,12 +75,13 @@ public class RecivaPortalRest
    {
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.lastModified(new Date());
-      responseBuilder.header("Content-Length", "" + entity.toString().length());
-      responseBuilder.header("x-reciva-challenge-format", "sernum");
+      responseBuilder.header("Content-Length", "" + entity.getBytes().length);
+      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
+      responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234; Path=/portal");
       if(!bHead)
       {
-      	responseBuilder.entity(entity.toString());
+      	responseBuilder.entity(entity.getBytes());
       }
       return responseBuilder;
    }
