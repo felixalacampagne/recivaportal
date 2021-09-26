@@ -11,7 +11,7 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers action would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The situation so far
-26-Aep-2021 Twiddled around with various responses - still don't see a GET request. The one I saw previously must have been 
+26-Sep-2021 Twiddled around with various responses - still don't see a GET request. The one I saw previously must have been 
 a fluke, or maybe I did it myself via the browser and forgot. Tried using the radios 'curl' to make the requests and it seems
 to work OK. For now I'm out of ideas as to what to do...
 Added some of the modified sharpfin and related files to the server. The FTP on the radio does not work well with any of the FTP
@@ -44,6 +44,7 @@ I finally got GitHub to work again with the following:
 
 26-Sep-2021 After pushing and pulling without problem for a few days now I suddenly get 'rejcted: not fast forward'. WTF does this
 mean. Why don't they say sensible things when decide randomly to stop it working?
+
   
 # Useful info
   
