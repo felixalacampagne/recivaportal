@@ -53,25 +53,27 @@ enough that I have to enter a message at all every time I save something, now it
 # Useful info
 
 ## Make the files in /root/hwconfig writable
-   mount -o remount,rw /dev/root /
+    mount -o remount,rw /dev/root /
 
 ## Relevant config files for Roberts WM201
-/root/hwconfig/config_parameters_983.txt
-/root/hwconfig/config983.txt
-/root/hwconfig/config984.txt
-/root/hwconfig/all_radios.txt
-/root/hwconfig/all_radios_common.txt
-
+/root/hwconfig/config_parameters_983.txt  
+/root/hwconfig/config983.txt  
+/root/hwconfig/config984.txt  
+/root/hwconfig/all_radios.txt  
+/root/hwconfig/all_radios_common.txt  
+  
 It appears the config files found elsewhere are generated from the /root/hwconfig version at each power up.
-Changing the content of config_parameters_983.txt is the only way to affect the message displayed at startup.
-TODO: Figure out where the user supplied settings are kept, they don't appear to be in the hwconfig files.
+Changing the content of config_parameters_983.txt is the only way to affect the message displayed at startup.  
+TODO: Figure out where the user supplied settings are kept, they don't appear to be in the hwconfig files.  
 TODO: Figure out how to get the option to set the bass and treble back following the factory reset. Maybe the
 factory reset removed the 'beta' patch and the original firmware doesn't have the tone control?
 
 ## Sending requests from the radio to the portal server
-NB Quotes are required ('&' means something to unix)
+NB Quotes are required ('&' means something to unix)  
 The HEAD request
-curl -v --head "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+    curl -v --head "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
 
 The GET request which never comes
-curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+    curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
