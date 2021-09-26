@@ -11,7 +11,12 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy shirtheads responsible for switching off the reciva servers action would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the shirtheads thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The situation so far
-
+26-Aep-2021 Twiddled around with various responses - still don't see a GET request. The one I saw previously must have been 
+a fluke, or maybe I did it myself via the browser and forgot. Tried using the radios 'curl' to make the requests and it seems
+to work OK. For now I'm out of ideas as to what to do...
+Added some of the modified sharpfin and related files to the server. The FTP on the radio does not work well with any of the FTP
+clients I've tried (MS FTP, FileZilla, Mobaxterm) - it seems not to support getting a directory list - so the only way to get
+files onto the radio is to use something like WGET so need the files on a webserver.
 20-Sep-2021 Examined a dump of the /root/ir binary and updated the headers based on some of the strings I saw there. I
 finally saw a GET request! I guess the response was not to the radios liking as I saw no other requests. No real idea
 what the 'challenge' response should contain, maybe it expects the list of stations immediately. Did notice that turning the
@@ -36,3 +41,29 @@ I finally got GitHub to work again with the following:
 - Push to remote - fingers crossed Eclipse will use the SSH private key and GitHub will accept it. There will probably be
   be quite a few popups containing completely incomprehensible stuff - click OK or Next and keep fingers crossed that
   it works and that they wont appear next time. Best to test on a simple readme update before relying on it for real stuff.
+  
+# Useful info
+  
+## Make the files in /root/hwconfig writable
+   mount -o remount,rw /dev/root /
+
+## Relevant config files for Roberts WM201
+/root/hwconfig/config_parameters_983.txt
+/root/hwconfig/config983.txt
+/root/hwconfig/config984.txt
+/root/hwconfig/all_radios.txt
+/root/hwconfig/all_radios_common.txt
+
+It appears the config files found elsewhere are generated from the /root/hwconfig version at each power up.
+Changing the content of config_parameters_983.txt is the only way to affect the message displayed at startup.
+TODO: Figure out where the user supplied settings are kept, they don't appear to be in the hwconfig files.
+TODO: Figure out how to get the option to set the bass and treble back following the factory reset. Maybe the
+factory reset removed the 'beta' patch and the original firmware doesn't have the tone control?
+
+## Sending requests from the radio to the portal server
+NB Quotes are required ('&' means something to unix)
+The HEAD request
+curl -v --head "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+The GET request which never comes
+curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"

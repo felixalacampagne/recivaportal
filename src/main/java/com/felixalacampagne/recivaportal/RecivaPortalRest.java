@@ -1,6 +1,7 @@
 package com.felixalacampagne.recivaportal;
 
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -30,9 +30,13 @@ public class RecivaPortalRest
    @GET
    @Path("/challenge")
    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-   public Response getChallenge(@QueryParam("serial") String serial, @QueryParam("sp") String sp)
+   public Response getChallenge(@QueryParam("serial") String serial, @QueryParam("sp") String sp,
+         @Context UriInfo ui,
+         @Context HttpHeaders headers)
    {
    	log.info("getChallenge: serial:" + serial + " sp:" + sp);
+   	log.debug("getChallenge: headers\n" + getHeadersString(headers));
+   	log.debug("getChallenge: params\n" + getQueryParamsString(ui));
       return makeChallengeResponse(false, serial);
    }
    
@@ -41,29 +45,26 @@ public class RecivaPortalRest
    @Produces(MediaType.APPLICATION_OCTET_STREAM)
    public Response getHeadChallenge(@QueryParam("serial") String serial, 
          @QueryParam("sp") String sp,
+         @Context UriInfo ui,
          @Context HttpHeaders headers)
    {
    	// HEAD response should only return the Headers which would be returned by the equivalent GET request.
    	// A GET request should follow but haven't seen one from the radio yet...
    	log.info("getHeadChallenge: serial:" + serial + " sp:" + sp);
-   	
-   	
-      MultivaluedMap<String, String> rh = headers.getRequestHeaders();
-      String str = rh.entrySet()
-                     .stream()
-                     .map(e -> e.getKey() + " = " + e.getValue())
-                     .collect(Collectors.joining("\n"));   	
-   	log.debug("getHeadChallenge: headers:\n" + str); // once again toString is forking useless! headers.toString());
+   	log.debug("getHeadChallenge: headers\n" + getHeadersString(headers));
+   	log.debug("getHeadChallenge: params\n" + getQueryParamsString(ui));
       return makeChallengeResponse(true, serial);
    }   
 
-   @HEAD
+
+   
+	@HEAD
    @Path("/{name}")
    @Produces(MediaType.TEXT_PLAIN)
-   public Response getHeadAny(@PathParam("name") String path, @Context UriInfo ui) 
+   public Response getHeadAny(@PathParam("name") String path, @Context UriInfo ui, @Context HttpHeaders headers) 
    {
    	log.info("getHeadAny:" + path);
-   	doAny(path, ui);
+   	doAny(path, ui, headers);
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.lastModified(new Date());
       return responseBuilder.build();
@@ -72,10 +73,10 @@ public class RecivaPortalRest
    @GET
    @Path("/{name}")
    @Produces(MediaType.TEXT_PLAIN)
-   public Response getAny(@PathParam("name") String path, @Context UriInfo ui) 
+   public Response getAny(@PathParam("name") String path, @Context UriInfo ui, @Context HttpHeaders headers) 
    {
    	log.info("getAny: path:" + path);
-   	doAny(path, ui);
+   	doAny(path, ui, headers);
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.entity("getAny called: path:" + path);
       responseBuilder.lastModified(new Date());
@@ -85,33 +86,69 @@ public class RecivaPortalRest
 
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = "1122334455667788";
-      Date lm = new Date(108,1,1,12,0); // 1 Jan 2008 12:00
+      String challenge = "11223344"; // 55667788";
+//            "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
+//      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
+//      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
+//      		+ "<protocol>http</protocol>\r\n"
+//      		+ "<metadata><use-metadata author=\"true\" title=\"true\"></use-metadata>\r\n"
+//      		+ "</metadata>\r\n"
+//      		+ "</stream>\r\n"
+//      		+ "</data>\r\n"
+//      		+ "<genres>23</genres>\r\n"
+//      		+ "<locations>34</locations>\r\n"
+//      		+ "</station></stations>";
+      // Date lm = new Date(108,1,1,12,0); // 1 Jan 2008 12:00
+      // Typical Java: deprecate something nice and simple and replace it with multiple lines of code
+      Calendar cal = Calendar.getInstance();
+      cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
+
    	ResponseBuilder responseBuilder = Response.status(200);
    	Response response;
-      responseBuilder.lastModified(lm);
+      responseBuilder.lastModified(cal.getTime());
       responseBuilder.header("Content-Length", "" + challenge.getBytes().length);
-      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
+      //responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
+      //responseBuilder.type(MediaType.TEXT_XML);
+      responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
-      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234; Path=/portal");
+      // x-reciva-session-id
+      // reciva-token
+      //responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234; Path=/portal");
       if(!bHead)
       {
       	responseBuilder.entity(challenge.getBytes());
       }
       response = responseBuilder.build();
-      // TODO log the header - response.toString() does not do this
-//      log.debug("makeChallengeResponse: Response:\n" + response.toString());
+      
+      log.debug("makeChallengeResponse: response header:\n" + getMultivaluedMapString(response.getStringHeaders()));
       return response;
    }
    
-	private void doAny(String path, UriInfo ui)
+	private void doAny(String path, UriInfo ui, HttpHeaders headers)
 	{
 		log.info("doAny: path:" + path);
-		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
-//		MultivaluedMap<String, String> pathParams = ui.getPathParameters();
-		for(String k : queryParams.keySet())
-		{
-			log.info("param: " + k + " value: " + queryParams.getFirst(k));
-		}
-	}   
+		log.debug("doAny: params\n" + getQueryParamsString(ui));
+		log.debug("doAny: headers\n" + getHeadersString(headers)); 
+		
+		return;
+	}
+
+   private String getHeadersString(HttpHeaders headers)
+	{
+   	return getMultivaluedMapString( headers.getRequestHeaders());
+	}
+   
+	private String getQueryParamsString(UriInfo ui)
+	{
+		return getMultivaluedMapString( ui.getQueryParameters());
+	}  
+	
+	private String getMultivaluedMapString(MultivaluedMap<String, String> mvm)
+	{
+      String str = mvm.entrySet()
+            .stream()
+            .map(e -> e.getKey() + ": " + e.getValue())
+            .collect(Collectors.joining("\n")); 
+      return str;
+	}
 }
