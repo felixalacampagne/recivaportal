@@ -20,6 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
 
@@ -86,7 +87,7 @@ public class RecivaPortalRest
 
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = "11223344"; // 55667788";
+      String challenge = "abcd1234"; // 55667788";
 //            "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
 //      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
@@ -103,21 +104,25 @@ public class RecivaPortalRest
       Calendar cal = Calendar.getInstance();
       cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
 
-   	ResponseBuilder responseBuilder = Response.status(200);
+   	ResponseBuilder responseBuilder = Response.status(Status.OK);
    	Response response;
       responseBuilder.lastModified(cal.getTime());
       responseBuilder.header("Content-Length", "" + challenge.getBytes().length);
       //responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
       //responseBuilder.type(MediaType.TEXT_XML);
       responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
+// ir contains this text 'X-Reciva-Challenge-Format: sernum' making me think it is something the the radio adds to 
+// a request rather than expects in the response.
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       // x-reciva-session-id
+      responseBuilder.header("X-Reciva-Session-Id", challenge);
       // reciva-token
-      //responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234; Path=/portal");
-      if(!bHead)
+      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal");
+      //if(!bHead)
       {
       	responseBuilder.entity(challenge.getBytes());
       }
+
       response = responseBuilder.build();
       
       log.debug("makeChallengeResponse: response header:\n" + getMultivaluedMapString(response.getStringHeaders()));
