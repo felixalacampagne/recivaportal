@@ -42,8 +42,9 @@ I finally got GitHub to work again with the following:
   be quite a few popups containing completely incomprehensible stuff - click OK or Next and keep fingers crossed that
   it works and that they wont appear next time. Best to test on a simple readme update before relying on it for real stuff.
 
-26-Sep-2021 After pushing and pulling without problem for a few days now I suddenly get 'rejcted: not fast forward'. WTF does this
-mean. Why don't they say sensible things when decide randomly to stop it working?
+26-Sep-2021 After pushing and pulling without problem for a few days now I suddenly get 'rejected: not fast forward'. WTF does this
+mean. Why don't they say sensible things when decide randomly to stop it working? Had to pull from Github some old stuff, which Eclipse will not let me overwrite in its merge window (how is this supposed to work, it neve lets me keep the stuff I want!!), and
+then push again. It seemed to work, luckily it was only the README which was affected. Maybe the problem was with me using the "Push Head..." button which appeared after I did "Commit and Push". TIP: Don't use "Push HEAD" if you want to stay sane.
 
   
 # Useful info
