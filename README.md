@@ -44,7 +44,7 @@ I finally got GitHub to work again with the following:
 
 26-Sep-2021 After pushing and pulling without problem for a few days now I suddenly get 'rejected: not fast forward'. WTF does this
 mean. Why don't they say sensible things when they decide randomly to stop it working? Had to pull from Github some old stuff, which Eclipse will not let me overwrite with the current stuff in its merge window (how is this supposed to work, it never lets me keep the stuff I want!!), and then push again. It seemed to work, luckily it was only the README which was affected. Maybe the problem was with me using the "Push Head..." button which appeared after I did "Commit and Push". TIP: Don't use "Push HEAD" if you want to stay sane.
-Shirt it's doing this 'rejected: not fast forward' again. What the hell!!!!
+Shirt it's doing this 'rejected: not fast forward' again. What the hell!!!! FORKING HELL!
 
   
 # Useful info
