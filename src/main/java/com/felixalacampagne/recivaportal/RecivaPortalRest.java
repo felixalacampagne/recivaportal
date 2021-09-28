@@ -87,7 +87,7 @@ public class RecivaPortalRest
 
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = "abcd1234"; // 55667788";
+      String challenge = "abcd"; // 55667788";
 //            "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
 //      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"

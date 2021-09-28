@@ -54,6 +54,8 @@ enough that I have to enter a message at all every time I save something, now it
 
 ## Make the files in /root/hwconfig writable
     mount -o remount,rw /dev/root /
+## Searching files for strings
+    find . -type f -exec grep -H 'string' {} \;
 
 ## Relevant config files for Roberts WM201
 /root/hwconfig/config_parameters_983.txt  
