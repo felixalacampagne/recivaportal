@@ -11,6 +11,7 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers action would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The situation so far
+28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.
 26-Sep-2021 Twiddled around with various responses - still don't see a GET request. The one I saw previously must have been 
 a fluke, or maybe I did it myself via the browser and forgot. Tried using the radios 'curl' to make the requests and it seems
 to work OK. For now I'm out of ideas as to what to do...
@@ -54,6 +55,7 @@ enough that I have to enter a message at all every time I save something, now it
 
 ## Make the files in /root/hwconfig writable
     mount -o remount,rw /dev/root /
+
 ## Searching files for strings
     find . -type f -exec grep -H 'string' {} \;
 
@@ -65,26 +67,38 @@ enough that I have to enter a message at all every time I save something, now it
 /root/hwconfig/all_radios_common.txt  
   
 It appears the config files found elsewhere are generated from the /root/hwconfig version at each power up.
-Changing the content of config_parameters_983.txt is the only way to affect the message displayed at startup.  
-TODO: Figure out where the user supplied settings are kept, they don't appear to be in the hwconfig files.  
+Changing the content of config_parameters_983.txt is the only way to affect the message displayed at startup. 
+
+THe user supplied values, eg. backlight level, alarms, netowrk address, are stored in individual files located in /mnt/config. THe presetN.xml files are also located in /mnt/config
+
 TODO: Figure out how to get the option to set the bass and treble back following the factory reset. Maybe the
 factory reset removed the 'beta' patch and the original firmware doesn't have the tone control?
 
 ## Enable logging on the radio
 
-Create the file /mnt/debug/log_enabled.txt with the following content: 
+Applies to installation with sharpfin patch installed. I think the patch changes required location of the log config file.  
+Create the file /mnt/config/log_enabled.txt with the following content: 
  
     allow
     LOG
 
-This content is invalid and will cause the log file to list the available keywords. It will still
-say the content is invalid when on of the keywords is used.
+A 'ir.log' file should appear in /mnt/debug after a reboot.  
+**NB.** I changed the log directory to /tmp/log  
+
+Additional logging keywords are listed at the start of the file. 
+
+Noticed IR contains RECIVA_LOG_DIR which looks like an env.var.. Unfortunately this doesn't specify the location for the log files. It is the location of the log_enabled.txt file according to /root/autostart. According to autostart the log output is simply a redirect of stdout so putting it in /tmp should be possible by updating autostart. There is only 1MB of space on /mnt/debug but 14MB on /tmp so moving the location is probably a very good idea given that /tmp is emptied at startup. The updated autostart is available from the portal sharpfin directory.  
+
+The following can be used to load a new log configuration:  
+
+    killall ir
+
+This is somewhat faster than 'reboot' or cycling the power.
 
 **WARNING: DO NOT LEAVE LOGGING ENABLED WHEN POWERING OFF!**  
 I'm pretty sure leaving the logging on caused the radio to become unresponsive - maybe due to the invalid
 content of 'log_enabled.txt' or maybe the log partition became full.  
-Luckily starting
-the radio with the button pushed in (and keeping it pushed in until it finished changing the display) appears to cause a firmware reset which presumably turned off the logging. 
+Luckily starting the radio with the button pushed in (and keeping it pushed in until it finished changing the display) appears to cause a firmware reset which presumably turned off the logging. 
 Unfortunately the later "beta" firmware version seems to have gone so
 no more nice features like bass/treble adjust. 
 

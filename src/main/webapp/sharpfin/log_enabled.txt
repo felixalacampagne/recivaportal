@@ -1,0 +1,7 @@
+allow
+OWGET
+OCURL
+NCNT
+OPSEL
+WGTC
+# Original Location: /mnt/config/log_enabled.txt
