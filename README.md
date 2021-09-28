@@ -70,6 +70,24 @@ TODO: Figure out where the user supplied settings are kept, they don't appear to
 TODO: Figure out how to get the option to set the bass and treble back following the factory reset. Maybe the
 factory reset removed the 'beta' patch and the original firmware doesn't have the tone control?
 
+## Enable logging on the radio
+
+Create the file /mnt/debug/log_enabled.txt with the following content: 
+ 
+    allow
+    LOG
+
+This content is invalid and will cause the log file to list the available keywords. It will still
+say the content is invalid when on of the keywords is used.
+
+**WARNING: DO NOT LEAVE LOGGING ENABLED WHEN POWERING OFF!**  
+I'm pretty sure leaving the logging on caused the radio to become unresponsive - maybe due to the invalid
+content of 'log_enabled.txt' or maybe the log partition became full.  
+Luckily starting
+the radio with the button pushed in (and keeping it pushed in until it finished changing the display) appears to cause a firmware reset which presumably turned off the logging. 
+Unfortunately the later "beta" firmware version seems to have gone so
+no more nice features like bass/treble adjust. 
+
 ## Sending requests from the radio to the portal server
 NB Quotes are required ('&' means something to unix)  
 The HEAD request
@@ -79,3 +97,14 @@ The HEAD request
 The GET request which never comes
 
     curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+## On the net
+Reciva chats
+https://iradioforum.net/forum/index.php?topic=2968.15  
+http://www.megapico.co.uk/sharpfin/mediaserver.html  
+https://leo.pfweb.eu/dl/JMCi1  
+http://www.g3gg0.de/wordpress/reversing/reciva-encryption-on-reciva-barracuda/  
+
+DNS Server code
+https://github.com/dnsjava/dnsjava. This looks complicated (it is!!)
+https://github.com/Coursal/DNS-Server This looks simpler (doesn't work!)
