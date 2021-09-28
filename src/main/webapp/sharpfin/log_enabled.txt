@@ -4,4 +4,4 @@ OCURL
 NCNT
 OPSEL
 WGTC
-# Original Location: /mnt/config/log_enabled.txt
+# File location: /mnt/config/log_enabled.txt

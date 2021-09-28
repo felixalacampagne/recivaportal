@@ -1,5 +1,5 @@
 #!/bin/sh
-# Original Location: /root/autostart
+# File location: /root/autostart
 # 28-Sep-2021 Moved logout to /tmp/log as there is more space available and 
 #             the /tmp directory is erased at startup
 export HOME=/root
