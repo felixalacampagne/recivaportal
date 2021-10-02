@@ -8,11 +8,13 @@ to remove error messages, presumably these error messages also cause the alarm f
 
 The aim of this project is to get the alarm to play the selected preset/stream even though the reciva servers no longer exist.
 
-I was hoping that the greedy barstewards responsible for switching off the reciva servers action would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
+I was hoping that the greedy barstewards responsible for switching off the reciva servers would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The story so far
+02-Oct-2021 Tried response status codes between 1 and 999. Radio still reports unknown status code so I guess there must
+be something else going on but haven't got a clue what it could be.  
 28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.  
-TODO: Alternative codes might be;
+Alternative codes might be;
 - 203 No Content-possibly applicable to the HEAD request
 - 401 Unauthorized-indicates user authorization is required. Response must contain header 'WWW-Authenticate: Basic realm="User visible realm"... maybe the value needs to be something else...
 - other-will have to randomly try responses since none of the 'official' ones appear to be relevant

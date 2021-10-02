@@ -6,6 +6,12 @@
   </appender>
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${catalina.base}/logs/recivaportal.log</file>
+    <!-- Rolling policy simply does not work.
+         The current log file should have a fixed name, tHe rolled files should have the date
+         suffix. This should be possible according to docs by using <file> for the current, fixed
+         name and <fileNamePattern> for the rolled file name and roll period. I only ever see 
+         a single file with the fixed name.
+     -->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">        
         <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
         <maxHistory>7</maxHistory>
