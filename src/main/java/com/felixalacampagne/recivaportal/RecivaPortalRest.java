@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.UriInfo;
 @Path("/")
 public class RecivaPortalRest
 {
+   static int responseStatus = 0;
 	final Logger log = LoggerFactory.getLogger(this.getClass());
    @GET
    @Path("/challenge")
@@ -87,7 +88,7 @@ public class RecivaPortalRest
 
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = "abcd"; // 55667788";
+      String challenge = "55667788";
 //            "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
 //      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
@@ -103,16 +104,27 @@ public class RecivaPortalRest
       // Typical Java: deprecate something nice and simple and replace it with multiple lines of code
       Calendar cal = Calendar.getInstance();
       cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
-
-   	ResponseBuilder responseBuilder = Response.status(Status.OK);
-   	Response response;
+      Response response;
+      int rspstat = getResponseStatus();
+      log.info("makeChallengeResponse: response status: " + rspstat);
+   	ResponseBuilder responseBuilder = Response.status(rspstat);
+   	
+            // OK);           OPSEL:Unknown result code: 200
+   	      // CREATED);      OPSEL:Unknown result code: 201
+   	      // ACCEPTED);     OPSEL:Unknown result code: 202
+   	      // NO_CONTENT);   OPSEL:Unknown result code: 204
+            // RESET_CONTENT);OPSEL:Unknown result code: 205
+   	      // UNAUTHORIZED)  OPSEL:Bad error code back from curl: HTTP response code said error
+   	
       responseBuilder.lastModified(cal.getTime());
       responseBuilder.header("Content-Length", "" + challenge.getBytes().length);
+      // responseBuilder.header("WWW-Authenticate", "Basic realm=\"User visible realm\""); // for UNAUTHORIZED
+      
       //responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
       //responseBuilder.type(MediaType.TEXT_XML);
       responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
-// ir contains this text 'X-Reciva-Challenge-Format: sernum' making me think it is something the the radio adds to 
-// a request rather than expects in the response.
+      // ir contains this text 'X-Reciva-Challenge-Format: sernum' making me think it is something the the radio adds to 
+      // a request rather than expects in the response.
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       // x-reciva-session-id
       responseBuilder.header("X-Reciva-Session-Id", challenge);
@@ -155,5 +167,11 @@ public class RecivaPortalRest
             .map(e -> e.getKey() + ": " + e.getValue())
             .collect(Collectors.joining("\n")); 
       return str;
+	}
+	
+	private int getResponseStatus()
+	{
+	   responseStatus++;
+	   return responseStatus;
 	}
 }

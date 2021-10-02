@@ -10,13 +10,22 @@
   <packaging>war</packaging>
 
   <name>recivaportal Maven Webapp</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <!-- This is how the radio access the site -->
+  <url>http://www.reciva.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    
+    <!--  
+    Do not want the address of my server to appear in the repo. For Eclipse the path
+    to Tomcat webapps is defined in Preferences->Run/Debug->String Substitution.
+    The run configuration used being and deploy adds the string substitution to
+    the environment (Run Configurations->[config]->Environment->Add use uppercase
+    for the env.var.)
+    -->
+    <tomcat.webapps>${env.TOMCAT_WEBAPPS}</tomcat.webapps>
   </properties>
 
   <dependencies>
@@ -131,7 +140,75 @@
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
         </plugin>
+       <plugin>
+         <!-- groupId>org.apache.maven.plugins</groupId -->
+         <artifactId>maven-dependency-plugin</artifactId>
+         <version>3.2.0</version>
+       </plugin>       
+        
       </plugins>
     </pluginManagement>
+    
+    <plugins>
+      <!-- Another example of something trivial being made enormously complicated by the modern tools:
+           Deploy the built war file to the tomcat webapps directory without having to fork around messing
+           with a working tomcat configuration.
+           
+           Great, you think, when you realise there is even a pre-defined keyword for this: 'deploy'.
+           Alas the maven geniuses have hijacked the normal usage of this to mean sending your file to
+           some remote place which will never exist, unlike the webserver webapps directory.
+           So the first thing is to figure out how to disable the default action. Took alot of Googling
+           but eventually found it...
+           Then how to simply copy a file. Also a non-trivial task. It appears that it is expected that
+           the server is somehow configured to accept files using a url. Well, that's the last thing I want!
+           Especially as all I need to do is copy the war file to the 'webapps' directory. 
+           After a lot of confusion I finally managed to get it to work. So now a simple compile and package
+           into the war can be done with "mvn install". To send the war file to tomcat after the packaging
+           use 'mvn install deploy'.
+           Now will have to figure out how to hide the name of my webserver in a workspace variable which
+           does not form part of the project.
+           Also need to synchronize the versions - why on earth doesn't no version mean the latest???? 
+       -->    
+      <plugin>
+         <artifactId>maven-deploy-plugin</artifactId>
+         <!-- version>2.8.2</version -->
+         <executions>
+            <execution>
+               <id>default-deploy</id>
+               <phase>none</phase>
+            </execution>
+         </executions>
+      </plugin>    
+      <plugin>
+         <!-- groupId>org.apache.maven.plugins</groupId -->
+         <artifactId>maven-dependency-plugin</artifactId>
+         <!-- version>3.2.0</version -->
+         <executions>
+            <execution>
+               <id>tomcatI</id>
+               <phase>deploy</phase>
+               <goals>
+                  <goal>copy</goal> <!-- NB. This MUST be copy as it is somehow embedded in the plugin -->
+               </goals>
+           </execution>
+         </executions>
+         <configuration>
+            <artifactItems>
+               <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${tomcat.webapps}</outputDirectory>
+                  <destFileName>portal.war</destFileName>
+               </artifactItem>
+             </artifactItems>
+             <outputDirectory>${tomcat.webapps}</outputDirectory>
+             <overWriteReleases>true</overWriteReleases>
+             <overWriteSnapshots>true</overWriteSnapshots>
+         </configuration>
+      </plugin>
+      </plugins>
   </build>
 </project>

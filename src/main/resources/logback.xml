@@ -7,20 +7,19 @@
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${catalina.base}/logs/recivaportal.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">        
-        <!-- daily rollover -->
-        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd}.log</fileNamePattern>
-        
-        <!-- Could use this to limit the file size as well but necessary for now
-    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-        <maxFileSize>2MB</maxFileSize>    
-
-        <totalSizeCap>1GB</totalSizeCap>
-       
-         -->
+        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
         <maxHistory>7</maxHistory>
     </rollingPolicy>
-      <append>true</append>
+    
+    <!-- Could use this to limit the file size as well but necessary for now
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+        <maxFileSize>2MB</maxFileSize>    
+        <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+    -->    
+
+      <!-- append>true</append -->
       <encoder>
           <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{50}: %msg%n</pattern>
       </encoder>

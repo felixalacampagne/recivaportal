@@ -10,8 +10,13 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 
 I was hoping that the greedy barstewards responsible for switching off the reciva servers action would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
-## The situation so far
-28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.
+## The story so far
+28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.  
+TODO: Alternative codes might be;
+- 203 No Content-possibly applicable to the HEAD request
+- 401 Unauthorized-indicates user authorization is required. Response must contain header 'WWW-Authenticate: Basic realm="User visible realm"... maybe the value needs to be something else...
+- other-will have to randomly try responses since none of the 'official' ones appear to be relevant
+
 26-Sep-2021 Twiddled around with various responses - still don't see a GET request. The one I saw previously must have been 
 a fluke, or maybe I did it myself via the browser and forgot. Tried using the radios 'curl' to make the requests and it seems
 to work OK. For now I'm out of ideas as to what to do...
@@ -111,6 +116,14 @@ The HEAD request
 The GET request which never comes
 
     curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+## Get files from the server
+
+**NB** Assumes DNS is setup to point to the local reciva portal.  
+Get the log enable file
+
+    wget "http://www.reciva.com/portal/sharpfin/log_enabled.txt"
+
 
 ## On the net
 Reciva chats
