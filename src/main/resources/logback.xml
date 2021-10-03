@@ -13,8 +13,13 @@
          a single file with the fixed name.
      -->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">        
-        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
-        <maxHistory>7</maxHistory>
+        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <!-- Saw in log file that logback created the rolled file but then immediately deleted it
+             Possibly a bug with the maxhistory since it also said there had been 300 periods
+             which is obviously wrong since this was at startup of the webserver. So try it
+             without the maxHistory...
+         -->
+        <!--  maxHistory>7</maxHistory -->
     </rollingPolicy>
     
     <!-- Could use this to limit the file size as well but necessary for now
