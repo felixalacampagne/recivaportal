@@ -18,6 +18,10 @@
              Possibly a bug with the maxhistory since it also said there had been 300 periods
              which is obviously wrong since this was at startup of the webserver. So try it
              without the maxHistory...
+             
+             Yippeee! Finally seen some file rolling, with HH in the pattern. Think the maxHistory
+             must have been causing a problem...
+             Now to see if daily rolling works without maxHistory.
          -->
         <!--  maxHistory>7</maxHistory -->
     </rollingPolicy>

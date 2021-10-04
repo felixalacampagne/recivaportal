@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.UriInfo;
 @Path("/")
 public class RecivaPortalRest
 {
-   static int responseStatus = 0;
+   static int responseStatus = Status.OK.getStatusCode();
 	final Logger log = LoggerFactory.getLogger(this.getClass());
    @GET
    @Path("/challenge")
@@ -171,7 +171,7 @@ public class RecivaPortalRest
 	
 	private int getResponseStatus()
 	{
-	   responseStatus++;
+	   //responseStatus++;
 	   return responseStatus;
 	}
 }
