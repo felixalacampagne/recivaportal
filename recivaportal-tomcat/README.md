@@ -11,6 +11,7 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The story so far
+06-Oct-2021 Split into three projects so I could make a Jetty version. No clue if it builds yet.  
 02-Oct-2021 Tried response status codes between 1 and 999. Radio still reports unknown status code so I guess there must
 be something else going on but haven't got a clue what it could be.  
 28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.  
