@@ -1,0 +1,304 @@
+2021-10-06 17:27:02 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal1.7803986842.com]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:02 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:02 GMT]
+Location: [http://portal1.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:02 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal2.7803986842.com]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:02 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:02 GMT]
+Location: [http://portal2.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:02 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal3.7803986842.com]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:02 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:02 GMT]
+Location: [http://portal3.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:02 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal4.7803986842.com]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:02 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:02 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:02 GMT]
+Location: [http://portal4.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:03 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal5.7803986842.com]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:03 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:03 GMT]
+Location: [http://portal5.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:03 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal6.7803986842.com]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:03 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:03 GMT]
+Location: [http://portal6.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:03 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal7.7803986842.com]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:03 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:03 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:03 GMT]
+Location: [http://portal7.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal8.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal8.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal9.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal9.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal10.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal10.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal11.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal11.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal12.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal12.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:04 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal13.7803986842.com]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:04 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:04 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:04 GMT]
+Location: [http://portal13.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:05 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal14.7803986842.com]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:05 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:05 GMT]
+Location: [http://portal14.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:05 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal15.7803986842.com]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:05 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:05 GMT]
+Location: [http://portal15.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]
+2021-10-06 17:27:05 INFO  com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: serial:0000df34 sp:v257-a-865-a-476
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: headers
+Accept: [*/*]
+Host: [portal16.7803986842.com]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: getHeadChallenge: params
+serial: [0000df34]
+sp: [v257-a-865-a-476]
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response status: 200 OK
+2021-10-06 17:27:05 DEBUG com.felixalacampagne.recivaportal.RecivaPortalRest: makeChallengeResponse: response header:
+Last-Modified: [Wed, 06 Oct 2021 15:27:05 GMT]
+Expires: [Thu, 07 Oct 2021 15:27:05 GMT]
+Location: [http://portal16.7803986842.com/portal/location]
+Content-Location: [http://www.reciva.com/portal/content-location]
+Content-Encoding: [UTF-8]
+Content-Length: [8]
+Content-Type: [text/plain]
+X-Reciva-Challenge-Format: [sernum]
+X-Reciva-Session-Id: [55667788]
+Set-Cookie: [JSESSIONID=ABCD1234ABCD1234; Path=/portal]

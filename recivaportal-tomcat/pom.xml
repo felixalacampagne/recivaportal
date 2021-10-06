@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.felixalacampagne</groupId>
+  <artifactId>recivaportal-tomcat</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>Recivaportal Tomcat 10 Webapp</name>
+  <!-- This is how the radio access the site -->
+  <url>http://www.reciva.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    
+    <!--  
+    Do not want the address of my server to appear in the repo. For Eclipse the path
+    to Tomcat webapps is defined in Preferences->Run/Debug->String Substitution.
+    The run configuration used being and deploy adds the string substitution to
+    the environment (Run Configurations->[config]->Environment->Add use uppercase
+    for the env.var.)
+    -->
+    <tomcat.webapps>${env.TOMCAT_WEBAPPS}</tomcat.webapps>
+  </properties>
+
+  <dependencies>
+      <dependency>
+         <groupId>com.felixalacampagne</groupId>
+         <artifactId>recivaportal-app</artifactId>
+         <version>0.0.1-SNAPSHOT</version>
+      </dependency>   
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    
+   <!-- Bunch of stuff which may or maynot be required to write a tomcat 10 serlet -->
+	<dependency>
+	    <groupId>org.apache.tomcat</groupId>
+	    <artifactId>tomcat-servlet-api</artifactId>
+	    <version>10.0.0</version>
+	</dependency>
+      
+   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common -->
+	<dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-common</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server -->
+	<dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-server</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+
+   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey/project -->
+	<dependency>
+	    <groupId>org.glassfish.jersey</groupId>
+	    <artifactId>project</artifactId>
+	    <version>3.0.0</version>
+	    <type>pom</type>
+	</dependency>
+	  
+	  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet -->
+	<dependency>
+	    <groupId>org.glassfish.jersey.containers</groupId>
+	    <artifactId>jersey-container-servlet</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+	  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
+	<dependency>
+	    <groupId>org.glassfish.jersey.containers</groupId>
+	    <artifactId>jersey-container-servlet-core</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.inject/jersey-hk2 -->
+	<dependency>
+	    <groupId>org.glassfish.jersey.inject</groupId>
+	    <artifactId>jersey-hk2</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+	<dependency>
+	    <groupId>org.glassfish.jaxb</groupId>
+	    <artifactId>jaxb-runtime</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
+
+
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>2.0.0-alpha1</version>
+	</dependency>
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-core</artifactId>
+		<version>1.3.0-alpha5</version>
+	</dependency>
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-classic</artifactId>
+		<version>1.3.0-alpha5</version>
+	</dependency>
+  </dependencies>
+
+  <build>
+    <finalName>portal</finalName>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+       <plugin>
+         <!-- groupId>org.apache.maven.plugins</groupId -->
+         <artifactId>maven-dependency-plugin</artifactId>
+         <version>3.2.0</version>
+       </plugin>       
+        
+      </plugins>
+    </pluginManagement>
+    
+    <plugins>
+      <!-- Another example of something trivial being made enormously complicated by the modern tools:
+           Deploy the built war file to the tomcat webapps directory without having to fork around messing
+           with a working tomcat configuration.
+           
+           Great, you think, when you realise there is even a pre-defined keyword for this: 'deploy'.
+           Alas the maven geniuses have hijacked the normal usage of this to mean sending your file to
+           some remote place which will never exist, unlike the webserver webapps directory.
+           So the first thing is to figure out how to disable the default action. Took alot of Googling
+           but eventually found it...
+           Then how to simply copy a file. Also a non-trivial task. It appears that it is expected that
+           the server is somehow configured to accept files using a url. Well, that's the last thing I want!
+           Especially as all I need to do is copy the war file to the 'webapps' directory. 
+           After a lot of confusion I finally managed to get it to work. So now a simple compile and package
+           into the war can be done with "mvn install". To send the war file to tomcat after the packaging
+           use 'mvn install deploy'.
+           Now will have to figure out how to hide the name of my webserver in a workspace variable which
+           does not form part of the project.
+           Also need to synchronize the versions - why on earth doesn't no version mean the latest???? 
+       -->    
+      <plugin>
+         <artifactId>maven-deploy-plugin</artifactId>
+         <!-- version>2.8.2</version -->
+         <executions>
+            <execution>
+               <id>default-deploy</id>
+               <phase>none</phase>
+            </execution>
+         </executions>
+      </plugin>    
+      <plugin>
+         <!-- groupId>org.apache.maven.plugins</groupId -->
+         <artifactId>maven-dependency-plugin</artifactId>
+         <!-- version>3.2.0</version -->
+         <executions>
+            <execution>
+               <id>tomcatI</id>
+               <phase>deploy</phase>
+               <goals>
+                  <goal>copy</goal> <!-- NB. This MUST be copy as it is somehow embedded in the plugin -->
+               </goals>
+           </execution>
+         </executions>
+         <configuration>
+            <artifactItems>
+               <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${tomcat.webapps}</outputDirectory>
+                  <destFileName>portal.war</destFileName>
+               </artifactItem>
+             </artifactItems>
+             <outputDirectory>${tomcat.webapps}</outputDirectory>
+             <overWriteReleases>true</overWriteReleases>
+             <overWriteSnapshots>true</overWriteSnapshots>
+         </configuration>
+      </plugin>
+      </plugins>
+  </build>
+</project>

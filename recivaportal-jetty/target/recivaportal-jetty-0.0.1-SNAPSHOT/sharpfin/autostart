@@ -1,0 +1,85 @@
+#!/bin/sh
+# File location: /root/autostart
+# 28-Sep-2021 Moved logout to /tmp/log as there is more space available and 
+#             the /tmp directory is erased at startup
+export HOME=/root
+export USER=root
+cd /root
+. /etc/profile
+
+DEBUG=/mnt/debug
+CPADEBUG=/tmp/log
+
+move_part_of_file()
+{
+  mv $1 /tmp/file1
+  dd if=/tmp/file1 of=/tmp/file2 count=$3 
+  mv /tmp/file2 $2 || rm -f $1 $2
+}
+
+if [ "x$RECIVA_HW_CONFIG" = "x0" ] ; then
+  echo Doing blind upgrade
+  blind_upgrade
+fi
+
+# This is needed for the encryption stuff
+/usr/bin/sernum --daemon
+
+# Start the infrared remote daemon (lirc) if there is a config file
+# Potentially select an alternate config file
+LIRC_BASE=/etc/config/lircd_config$RECIVA_HW_CONFIG
+LIRC_FILE=$LIRC_BASE.conf
+ALT_LIRC_FILE="/mnt/config/RCS_RemoteCode.txt"
+if [ -f ${LIRC_FILE} ] ; then
+  if [ -f $ALT_LIRC_FILE ] ; then
+    # We're going to use an alternate config file
+    # eg /etc/config/lircd_config672_2.conf
+    # (default was /etc/config/lircd_config672.conf)
+    ALTERNATE_NUMBER=`cat $ALT_LIRC_FILE`
+    LIRC_FILE=$LIRC_BASE'_'$ALTERNATE_NUMBER.conf
+  fi
+
+  # Check daemon is not already running
+  if [ -f /var/run/lircd.pid ] ; then
+    echo LIRC daemon already running
+  else
+    # start the daemon
+    /usr/sbin/lircd -d /dev/lirc/0 $LIRC_FILE
+  fi
+fi
+
+# Activate network interface
+ifconfig lo 127.0.0.1 up
+
+# Start application
+# Choose application to run
+APP=./ir
+if [ "x$RECIVA_HW_CONFIG" = "x1000" -a -f master_appb ] ; then
+  APP=./master_appb
+fi
+
+# Write log output to debug file if debug is enabled
+if [ -f /mnt/config/log_enabled.txt ] ; then
+  mount $DEBUG
+  if [ `mount|grep -c /mnt/debug` -eq 0 ] ; then
+    DEBUG_PARTITION=`grep /mnt/debug /etc/fstab|cut -f1 -d' '|sed -e s/block//`
+    echo "Debug partition didn't get mounted.  Erasing and mounting it..."
+    flash_eraseall $DEBUG_PARTITION
+    mount /mnt/debug
+  fi
+  cd $DEBUG
+  [ -f ir.log.4 ] && move_part_of_file ir.log.4 ir.log.5 300
+  [ -f ir.log.3 ] && move_part_of_file ir.log.3 ir.log.4 320
+  [ -f ir.log.2 ] && move_part_of_file ir.log.2 ir.log.3 340
+  [ -f ir.log.1 ] && move_part_of_file ir.log.1 ir.log.2 360
+  [ -f ir.log.0 ] && move_part_of_file ir.log.0 ir.log.1 380
+  [ -f ir.log   ] && move_part_of_file ir.log   ir.log.0 400
+
+  # CPA Put logs in tmp
+  mkdir -p $CPADEBUG
+  cd /root
+  export RECIVA_LOG_DIR=/mnt/config
+  $APP 2>&1 | tee $CPADEBUG/ir_cpa.log >/dev/null
+else
+  exec $APP >/dev/null 2>&1
+fi

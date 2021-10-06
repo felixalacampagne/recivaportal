@@ -1,0 +1,55 @@
+<configuration debug="true" scan="true" scanPeriod="5 seconds">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level %logger{50}: %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.dir}/recivaportal.log</file>
+    <!-- Rolling policy simply does not work.
+         The current log file should have a fixed name, tHe rolled files should have the date
+         suffix. This should be possible according to docs by using <file> for the current, fixed
+         name and <fileNamePattern> for the rolled file name and roll period. I only ever see 
+         a single file with the fixed name.
+     -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">        
+        <fileNamePattern>${log.dir}/recivaportal.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+        <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    
+    <!-- Could use this to limit the file size as well but necessary for now
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${catalina.base}/logs/recivaportal.%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+        <maxFileSize>2MB</maxFileSize>    
+        <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+    -->    
+
+      <!-- append>true</append -->
+      <encoder>
+          <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{50}: %msg%n</pattern>
+      </encoder>
+  </appender>
+  
+  <!-- Simple requirement for logging;
+       1) Send all (including my stuff) warnings and above to console
+       2) Send all (including my stuff) warnings and above to the reciva log file
+       3) Send debug msgs from my stuff to the reciva log file and NOT to console
+  
+      Sounds trivial but no way can I get it to work!!
+      The warn msgs from my stuff only appear in the reciva log. Don't know that anything
+      else is generating warn msgs so can't tell what happens to them. 
+      So stuck with having to look in multiple log files to see issues caused by other code. 
+   -->
+  <root level="warn">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />     
+  </root>
+ 
+   
+  <!-- Log debug info for my stuff to the log file -->
+  <logger name="com.felixalacampagne" level="debug" additivity="false">
+    <appender-ref ref="FILE" /> 
+  </logger>
+
+</configuration>
