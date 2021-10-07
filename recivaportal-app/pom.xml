@@ -4,6 +4,12 @@
   <artifactId>recivaportal-app</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>The webapp code used by either the recivaportal-tomcat or recivaportal-jetty projects</name>
+     <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+    
+   </properties>
    <dependencies>
       <dependency>
          <groupId>jakarta.servlet</groupId>
