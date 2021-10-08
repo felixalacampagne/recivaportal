@@ -4,9 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.felixalacampagne</groupId>
   <artifactId>recivaportal-tomcat</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>Recivaportal Tomcat 10 Webapp</name>
@@ -15,8 +13,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     
     <!--  
     Do not want the address of my server to appear in the repo. For Eclipse the path
@@ -216,4 +214,9 @@
       </plugin>
       </plugins>
   </build>
+  <parent>
+     <artifactId>recivaportal</artifactId>
+     <groupId>com.felixalacampagne</groupId>
+     <version>0.0.1-SNAPSHOT</version>
+  </parent>
 </project>
