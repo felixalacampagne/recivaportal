@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <artifactId>recivaportal-tomcat</artifactId>
-  <packaging>war</packaging>
+	<artifactId>recivaportal-tomcat</artifactId>
+	<packaging>war</packaging>
 
-  <name>Recivaportal Tomcat 10 Webapp</name>
+	<name>recivaportal-tomcat</name>
   <!-- This is how the radio access the site -->
-  <url>http://www.reciva.com</url>
+	<url>http://www.reciva.com</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target -->
-    
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!--  
     Do not want the address of my server to appear in the repo. For Eclipse the path
     to Tomcat webapps is defined in Preferences->Run/Debug->String Substitution.
@@ -23,105 +21,100 @@
     the environment (Run Configurations->[config]->Environment->Add use uppercase
     for the env.var.)
     -->
-    <tomcat.webapps>${env.TOMCAT_WEBAPPS}</tomcat.webapps>
-  </properties>
+		<tomcat.webapps>${env.TOMCAT_WEBAPPS}</tomcat.webapps>
+	</properties>
 
-  <dependencies>
-      <dependency>
-         <groupId>com.felixalacampagne</groupId>
-         <artifactId>recivaportal-app</artifactId>
-         <version>${recivaportal.app.version}</version>
-      </dependency>   
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>com.felixalacampagne</groupId>
+			<artifactId>recivaportal-app</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
     
    <!-- Bunch of stuff which may or maynot be required to write a tomcat 10 serlet -->
-	<dependency>
-	    <groupId>org.apache.tomcat</groupId>
-	    <artifactId>tomcat-servlet-api</artifactId>
-	    <version>10.0.0</version>
-	</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>10.0.0</version>
+		</dependency>
       
    <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common -->
-	<dependency>
-	    <groupId>org.glassfish.jersey.core</groupId>
-	    <artifactId>jersey-common</artifactId>
-	    <version>3.0.0</version>
-	</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-common</artifactId>
+			<version>3.0.0</version>
+		</dependency>
    <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server -->
-	<dependency>
-	    <groupId>org.glassfish.jersey.core</groupId>
-	    <artifactId>jersey-server</artifactId>
-	    <version>3.0.0</version>
-	</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
    <!-- https://mvnrepository.com/artifact/org.glassfish.jersey/project -->
-	<dependency>
-	    <groupId>org.glassfish.jersey</groupId>
-	    <artifactId>project</artifactId>
-	    <version>3.0.0</version>
-	    <type>pom</type>
-	</dependency>
+		<!-- dependency>
+			<groupId>org.glassfish.jersey</groupId>
+			<artifactId>project</artifactId>
+			<version>3.0.0</version>
+		</dependency -->
 	  
 	  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
-	<dependency>
-	    <groupId>org.glassfish.jersey.containers</groupId>
-	    <artifactId>jersey-container-servlet-core</artifactId>
-	    <version>3.0.0</version>
-	</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+	</dependencies>
 
-
-
-
-  </dependencies>
-
-  <build>
-    <finalName>portal</finalName>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-      <plugins>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
+	<build>
+		<finalName>portal</finalName>
+		<pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+			<plugins>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
         <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.2.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>${maven.deploy.plugin.version}</version>
-        </plugin>
-       <plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven.deploy.plugin.version}</version>
+				</plugin>
+				<plugin>
          <!-- groupId>org.apache.maven.plugins</groupId -->
-         <artifactId>maven-dependency-plugin</artifactId>
-         <version>3.2.0</version>
-       </plugin>       
-        
-      </plugins>
-    </pluginManagement>
-    
-    <plugins>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
       <!-- Another example of something trivial being made enormously complicated by the modern tools:
            Deploy the built war file to the tomcat webapps directory without having to fork around messing
            with a working tomcat configuration.
@@ -140,52 +133,52 @@
            Now will have to figure out how to hide the name of my webserver in a workspace variable which
            does not form part of the project.
            Also need to synchronize the versions - why on earth doesn't no version mean the latest???? 
-       -->    
-      <plugin>
-         <artifactId>maven-deploy-plugin</artifactId>
+       -->
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
          <!-- version>2.8.2</version -->
-         <executions>
-            <execution>
-               <id>default-deploy</id>
-               <phase>none</phase>
-            </execution>
-         </executions>
-      </plugin>    
-      <plugin>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
          <!-- groupId>org.apache.maven.plugins</groupId -->
-         <artifactId>maven-dependency-plugin</artifactId>
+				<artifactId>maven-dependency-plugin</artifactId>
          <!-- version>3.2.0</version -->
-         <executions>
-            <execution>
-               <id>tomcatI</id>
-               <phase>deploy</phase>
-               <goals>
-                  <goal>copy</goal> <!-- NB. This MUST be copy as it is somehow embedded in the plugin -->
-               </goals>
-           </execution>
-         </executions>
-         <configuration>
-            <artifactItems>
-               <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <version>${project.version}</version>
-                  <type>${project.packaging}</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${tomcat.webapps}</outputDirectory>
-                  <destFileName>portal.war</destFileName>
-               </artifactItem>
-             </artifactItems>
-             <outputDirectory>${tomcat.webapps}</outputDirectory>
-             <overWriteReleases>true</overWriteReleases>
-             <overWriteSnapshots>true</overWriteSnapshots>
-         </configuration>
-      </plugin>
-      </plugins>
-  </build>
-  <parent>
-     <artifactId>recivaportal</artifactId>
-     <groupId>com.felixalacampagne</groupId>
-     <version>${recivaportal.app.version}</version>
-  </parent>
+				<executions>
+					<execution>
+						<id>tomcatI</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>copy</goal> <!-- NB. This MUST be copy as it is somehow embedded in the plugin -->
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+							<version>${project.version}</version>
+							<type>${project.packaging}</type>
+							<overWrite>true</overWrite>
+							<outputDirectory>${tomcat.webapps}</outputDirectory>
+							<destFileName>portal.war</destFileName>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>${tomcat.webapps}</outputDirectory>
+					<overWriteReleases>true</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<parent>
+		<artifactId>recivaportal</artifactId>
+		<groupId>com.felixalacampagne</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 </project>

@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.UriInfo;
 // Gratuitous change
 
 @Path("/")
-public class RecivaPortalRest
+public class RecivaPortalRestTC
 {
    static Status responseStatus = Status.OK;
 	final Logger log = LoggerFactory.getLogger(this.getClass());

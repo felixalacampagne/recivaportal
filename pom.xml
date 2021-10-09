@@ -3,9 +3,22 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>com.felixalacampagne</groupId>
    <artifactId>recivaportal</artifactId>
-   <version>${recivaportal.app.version}</version>
+   <!-- 
+        <version>${recivaportal.app.version}</version>
+        
+        In yet another attack of the modern tool developers living in a parallel universe the maven geniuses
+        have decreed that the annoyance of the absurd requirement to be specifiedrequirement everywhere
+        shall be exacerbated by prevent use of a variable to propgate the same version into all the
+        idiotic places it is required.
+        
+        Instead each time the version is changed ALL of the dependent files must also be changed and then
+        re-added to the source control system.
+        There solution to the issue they created:
+        mvn versions:set -DnewVersion=0.0.2-SNAPSHOT
+    -->
+   <version>0.0.1-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>Master POM for recivalportal sub-projects</name>
+   <name>recivalportal-master</name>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,7 +26,8 @@
       <!-- maven.compiler.source>1.8</maven.compiler.source -->
       <!-- maven.compiler.target>1.8</maven.compiler.target -->
       <maven.deploy.plugin.version></maven.deploy.plugin.version>
-      <recivaportal.app.version>0.0.1-SNAPSHOT</recivaportal.app.version>
+      
+      
    </properties>
 
    <modules>
@@ -38,8 +52,6 @@
    </profiles>
 
    <dependencies>
-         <!-- Jetty 11 needs Servlet 5 -->
-         <!-- java.lang.NoClassDefFoundError: jakarta/servlet/ServletInputStream -->
       <dependency>
          <groupId>jakarta.servlet</groupId>
          <artifactId>jakarta.servlet-api</artifactId>
