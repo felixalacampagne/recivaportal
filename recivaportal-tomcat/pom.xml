@@ -9,7 +9,7 @@
 	<packaging>war</packaging>
 
 	<name>recivaportal-tomcat</name>
-  <!-- This is how the radio access the site -->
+  <!-- This is how the radio accesses the site -->
 	<url>http://www.reciva.com</url>
 
 	<properties>
@@ -37,41 +37,13 @@
 			<scope>test</scope>
 		</dependency>
     
-   <!-- Bunch of stuff which may or maynot be required to write a tomcat 10 serlet -->
+      <!-- Bunch of stuff which may or maynot be required to write a tomcat 10 serlet -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
 			<version>10.0.0</version>
 		</dependency>
-      
-   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common -->
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-common</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server -->
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-
-   <!-- https://mvnrepository.com/artifact/org.glassfish.jersey/project -->
-		<!-- dependency>
-			<groupId>org.glassfish.jersey</groupId>
-			<artifactId>project</artifactId>
-			<version>3.0.0</version>
-		</dependency -->
-	  
-	  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet-core</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-	</dependencies>
-
+   </dependencies>   
 	<build>
 		<finalName>portal</finalName>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

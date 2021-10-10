@@ -3,32 +3,30 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Fake Reciva Portal Web Application</display-name>
+  <display-name>portal</display-name>
+   <!-- this should not be necessary -->
    <servlet>
-    <servlet-name>jersey-servlet</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-
-    <init-param>
-        <param-name>jersey.config.server.provider.packages</param-name>
-        <param-value>com.felixalacampagne.recivaportal.RecivaPortalRestTC</param-value>
-    </init-param>
-    <init-param>
-        <param-name>jakarta.ws.rs.core.Application</param-name>
+      <servlet-name>reciva-servlet</servlet-name>
+      <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+      <init-param>
+        <param-name>jakarta.ws.rs.Application</param-name>
         <param-value>com.felixalacampagne.recivaportal.RecivaPortalApplication</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
 
+   <!-- this should not be necessary -->
+   <servlet-mapping>
+      <servlet-name>reciva-servlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
 
+   <!-- This is required to serve the static items from the sharpfin directory -->
+   <servlet-mapping>
+      <servlet-name>default</servlet-name>
+      <url-pattern>/sharpfin/*</url-pattern>
+   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>default</servlet-name>
-    <url-pattern>/sharpfin/*</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-  <servlet-name>jersey-servlet</servlet-name>
-  <url-pattern>/*</url-pattern>
-</servlet-mapping>
 
 
 </web-app>

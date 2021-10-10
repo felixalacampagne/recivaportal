@@ -23,9 +23,9 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <!-- JRE version must be specified in a plugin block now, see below -->
-      <!-- maven.compiler.source>1.8</maven.compiler.source -->
-      <!-- maven.compiler.target>1.8</maven.compiler.target -->
-      <maven.deploy.plugin.version></maven.deploy.plugin.version>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+      <maven.deploy.plugin.version>2.8.2</maven.deploy.plugin.version>
       
       
    </properties>
@@ -46,6 +46,7 @@
             <activeByDefault>true</activeByDefault>
          </activation>
          <modules>
+         <module>recivaportal-app</module>
             <module>recivaportal-jetty</module>
          </modules>
       </profile>
@@ -115,7 +116,7 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.8.0</version>
             <configuration>
-               <release>11</release>  <!--or <release>10</release>-->
+               <release>1.8</release> <!-- Why the fork can't it say 1.8 for Java 1.8 and 11 for Java 11??? -->
             </configuration>
          </plugin>
 
@@ -126,7 +127,7 @@
            Great, you think, when you realise there is even a pre-defined keyword for this: 'deploy'.
            Alas the maven geniuses have hijacked the normal usage of this to mean sending your file to
            some remote place which will never exist, unlike the webserver webapps directory.
-           So the first thing is to figure out how to disable the default action. Took alot of Googling
+           So the first thing is to figure out how to disable the default action. Took a lot of Googling
            but eventually found it...
            Then how to simply copy a file. Also a non-trivial task. It appears that it is expected that
            the server is somehow configured to accept files using a url. Well, that's the last thing I want!
@@ -134,15 +135,13 @@
            After a lot of confusion I finally managed to get it to work. So now a simple compile and package
            into the war can be done with "mvn install". To send the war file to tomcat after the packaging
            use 'mvn install deploy'.
-           Now will have to figure out how to hide the name of my webserver in a workspace variable which
-           does not form part of the project.
            Also need to synchronize the versions - why on earth doesn't no version mean the latest???? 
        -->
          <plugin>
             <artifactId>maven-deploy-plugin</artifactId>
             <!-- Why the hell do these things all have to have a version, why not use the latezt 
                  or whatever is most appropriate to the mvn installation or whatever -->
-            <version>${maven.deploy.plugin.version}2.8.2</version> 
+            <version>${maven.deploy.plugin.version}</version> 
             <executions>
                <execution>
                   <id>default-deploy</id>

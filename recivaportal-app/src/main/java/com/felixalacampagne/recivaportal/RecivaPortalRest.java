@@ -83,6 +83,7 @@ public class RecivaPortalRest
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.entity("getAny called: path:" + path);
       responseBuilder.lastModified(new Date());
+      responseBuilder.header("Content-Length", "" + body.getBytes().length);
       responseBuilder.entity(body);
       return responseBuilder.build();
 
@@ -177,8 +178,8 @@ public class RecivaPortalRest
 		log.debug("doAny: params\n" + getQueryParamsString(ui));
 		log.debug("doAny: headers\n" + getHeadersString(headers)); 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Request URL:\n").append(ui.toString()).append("\n\n");
-		sb.append("Response Header:\n").append(getHeadersString(headers)).append("\n\n");
+		sb.append("Request URL:\n").append(ui.getRequestUri().toASCIIString()).append("\n\n");
+		sb.append("Request Header:\n").append(getHeadersString(headers)).append("\n\n");
 		
 		return sb.toString();
 	}
