@@ -116,7 +116,13 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.8.0</version>
             <configuration>
-               <release>1.8</release> <!-- Why the fork can't it say 1.8 for Java 1.8 and 11 for Java 11??? -->
+                <!-- More modern tool lunacy. Must use 'source' and 'target' or Java 1.0 is the default 
+                (or something just as out of date) and Java 8 syntax gives build errors even though a Java 8 JDK
+                is being used. To ensure complete lack of consistency 'release' must be used to 
+                compile with Java 11 (even though there are no Java 11 language features used in my code! -->
+               <source>1.8</source>
+               <target>1.8</target>            
+               <!-- release>11</release -->
             </configuration>
          </plugin>
 
