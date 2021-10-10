@@ -11,6 +11,7 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The story so far
+10-Oct-2021 Just discovered from here 'https://www.bbc.co.uk/blogs/internet/entries/481e7233-0aea-4b15-8ace-878ce549108c' that the streams used by the radio are likely to stop working soon, or be changed to an incompatible format, ie. HTTPS using TLS. If this is the case it would appear to be futile to spend any more time on this project...   
 09-Oct-2021 many hours later finally got it to work. I have no idea which of the pieces of magic actually persuaded tomcat to start using the reciva portal REST api again but it is currently working. Unfortunately it is not sharing the REST api with the Jetty version as I copied the class into the tomcat project. The Jetty project appeared to require Java 11 but when I compile the tomcat code using Java 11 the tomcat installation complains about this 52 vs. 55 shirt. Making the project a 1.8 project in Eclipse fixes this problem - no clue why the Eclipse java version should change things when it is supposed to be using the nonesense in the master pom.xml for maven-compiler-plugin where it says release=11 which is supposed to mean it generates the code using Java 11. So I guess the next step is to figure out how to make a version of the shared class which is compile with Java 1.8 for the tomcat version and Java 11 for the jetty version.... Or I can forget about the jetty version for the moment as it did not appear to solve the problem of radio not sending any actual GET requests!  
 09-Oct-2021 the tomcat version builds and deploys without error (usually, the maven building keeps throwing random errors which resolve themselves when the exact same command is repeated moments later). Tomcat then reports 404 for all portal URLs which should be handled by the REST class - index.jsp and the sharpfin URLs work fine. I have absolutely no clue why this is. It does not appear to be related to having the REST in a different JAR because I added the class to the Tomcat source and it still behaves the same. Another example of how the modern tools really go out of their way to FORK YOU OVER good and proper. Another wasted morning trying to get something working which was working before and now inexplicably does not. Magic at its wonderous best. Eclipse doesn't help as keeps displaying completely random errors for things that are not there: the latest is 'Element type "dependency" must be followed by either attribute specifications, ">" or "/>".' for the line 68 of the tomcat pom - the forking element is followed by a '>'.
 08-Oct-2021 Spent a fascinating few hours trying to get rid of the red flags in Eclipse. This maven shirt is really good
@@ -129,6 +130,14 @@ The HEAD request
 The GET request which never comes
 
     curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
+
+Saw this the site talking about decrypting the traffic between the radio and the reciva server  
+
+    curl reciva://copper.reciva.com:6000/service-pack/sp255-c-106.bin
+
+'reciva://' is not one of your standard URL protocol names. Maybe 'curl' is the one I should be looking at for figuring out how to get more than a HEAD request...  
+
+... to be continued.  
 
 ## Get files from the server
 
