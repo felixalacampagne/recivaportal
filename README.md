@@ -157,3 +157,30 @@ http://www.g3gg0.de/wordpress/reversing/reciva-encryption-on-reciva-barracuda/
 DNS Server code
 https://github.com/dnsjava/dnsjava. This looks complicated (it is!!)
 https://github.com/Coursal/DNS-Server This looks simpler (doesn't work!)
+
+
+
+Might need the app to respond to both /portal and /server which means it must be deployed
+as the tomcat ROOT. This can be done by renaming the portal.war to ROOT.war. There is also
+a way by modifying server.xml but it block the usage of autodeploy which is very handy for
+development testing and for some reason it is also not recommended by the tomcat docs (probably
+simply because it makes life too easy...). 
+
+The other choice according to https://www.baeldung.com/tomcat-root-application is;
+
+To avoid this problem with the server.xml, we've got the third option: 
+we'll set the context path in an application-specific XML file.
+
+Therefore, we have to create a ROOT.xml at 
+$CATALINA_HOME\conf\Catalina\localhost with the following content:
+
+<Context docBase="../deploy/ExampleApp.war"/>
+Two points are worth nothing here.
+
+First, we don't have to specify the path explicitly as in the previous option – 
+Tomcat derives that from the name of our ROOT.xml.
+
+And second – since we're defining our context in a different file than the server.xml, 
+our docBase has to be outside of $CATALINA_HOME\webApps.
+
+It doesn't really mention whether autodeploy actually works with this...
