@@ -1,0 +1,77 @@
+package com.felixalacampagne.recivaportal;
+
+import java.io.UnsupportedEncodingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static com.felixalacampagne.recivaportal.Utils.dumpBuffer;
+public class RecivaProtocolHandler
+{
+final Logger log = LoggerFactory.getLogger(this.getClass());
+
+//	The first data block contains an 8 byte header which contains the file size
+//	(4 bytes) and an unknown (maybe fixed) value (also 4 bytes). The header
+//	is followed by 246 bytes of payload, a single 0x00 byte and a checksum
+//	(again, a simple modulo 256 sum).
+//	All further (i.e. non-first) data blocks contain 254 bytes of payload,
+//	a single 0x00 byte and a checksum.	
+
+	// No idea how to handle this since I've no idea how requests for subsequent data blocks
+	// will look
+	// for now Assume there will only be one data block containing enough dummy data to stop
+	// the radio from showing error messages
+	public byte[] makeFirstDataBlock(String payload)
+	{
+		byte [] type1 = new byte[256];
+		byte[] paybytes;
+		try
+		{
+			paybytes = payload.getBytes("UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// This is a stupid exception that will never happen as UTF-8 is builtin!
+			paybytes = payload.getBytes();
+		}
+		int len = paybytes.length;
+		int tmplen;
+		int i = 0;
+		for(i = 8; i < 256; i++)
+		{
+			type1[i] = 0x77;
+		}
+		
+		if(len > 246)
+			len = 246;
+		
+		tmplen = len;
+		for(i=0; i<4; i++)
+		{
+			type1[i] = (byte) (tmplen & 0xFF);
+			tmplen >>= 8;
+		}
+		for(i=4; i<8; i++)
+		{
+			type1[i] = (byte) (0x00);
+		}	
+		
+		for(i=0; i < len; i++)
+		{
+			type1[i+8] = paybytes[i];
+		}
+		type1[len+8] = 0x00;
+		
+		// Not exactly sure what is meant by a 'simple modulo 256 sum'
+		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
+		// It could mean that only the real data in the block is summed, ie. header and payload.
+		
+		long sum = 0;
+		for(i=0; i < 255; i++)
+		{
+			sum += type1[i];
+		}
+		type1[255] = (byte)(sum & 0xFF);
+		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
+		return type1;
+	}
+}

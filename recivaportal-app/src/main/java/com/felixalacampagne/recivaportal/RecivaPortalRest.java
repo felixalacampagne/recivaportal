@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -23,13 +25,14 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
-// Gratuitous change
+import static com.felixalacampagne.recivaportal.Utils.dumpBuffer;
 
 @Path("/")
 public class RecivaPortalRest
 {
    static Status responseStatus = Status.OK;
 	final Logger log = LoggerFactory.getLogger(this.getClass());
+	final Utils utils = new Utils();
    @GET
    @Path("/challenge")
    @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -59,7 +62,77 @@ public class RecivaPortalRest
       return makeChallengeResponse(true, serial);
    }   
 
+   @POST
+   @Path("/session")
+   @Produces(MediaType.TEXT_PLAIN)
+   @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+   public Response postSession( 
+   		@QueryParam("serial") String serial,
+   		@QueryParam("auth") String auth,   // Looks like Base64
+   		@QueryParam("sp") String sp,
+   		@Context UriInfo ui,  
+   		@Context HttpHeaders headers,
+   		byte[] messageBody) 
+   {
+   	Response response = null;
+   	try
+   	{
+	   	String path = ui.getPath();
+	   	log.info("postSession: request path: " + path);
+	   	log.info("postSession: request body length: " + messageBody.length);
+	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
+	   	String body = doAny(path, ui, headers);
+	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
+	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
+	      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
+	      		+ "<protocol>http</protocol>\r\n"
+	      		+ "<metadata><use-metadata author=\"true\" title=\"true\"></use-metadata>\r\n"
+	      		+ "</metadata>\r\n"
+	      		+ "</stream>\r\n"
+	      		+ "</data>\r\n"
+	      		+ "<genres>23</genres>\r\n"
+	      		+ "<locations>34</locations>\r\n"
+	      		+ "</station></stations>";
+	   	body =  "<stations></stations>";
+	   	
+	   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
+	   	RecivaEncryption renc = new RecivaEncryption();
+	   	
+	   	
+	   	byte [] payload = rph.makeFirstDataBlock(body);
 
+//	   	payload = renc.recivaDESencrypt(payload);
+	   	ResponseBuilder responseBuilder = Response.status(200);
+	 
+	      
+	      Calendar cal = Calendar.getInstance();
+	      // cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
+	
+	      responseBuilder.lastModified(cal.getTime());
+	      cal.add(Calendar.DAY_OF_MONTH,1);
+	      responseBuilder.expires(cal.getTime());
+	      responseBuilder.encoding("UTF-8");
+	      responseBuilder.header("Content-Length", "" + payload.length);
+	      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM_TYPE);
+	      //responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
+	      // x-reciva-session-id
+	      responseBuilder.header("X-Reciva-Session-Id", auth);
+	      // reciva-token
+	      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/");      
+	      responseBuilder.entity(payload);
+	      response = responseBuilder.build();
+	      log.debug("postSession: response status: " + response.getStatusInfo().getStatusCode() + " " + response.getStatusInfo().getReasonPhrase());
+	      log.debug("postSession: response header:\n" + getMultivaluedMapString(response.getStringHeaders()));    
+	      
+	      return response;
+   	}
+   	catch(Exception e)
+   	{
+   		log.error("postSession: Exception processing 'session' request: ", e);
+   		response = Response.status(Status.INTERNAL_SERVER_ERROR).build();//responseBuilder.
+   	}
+   	return response;
+   }
    
 	@HEAD
    @Path("/{name}")
@@ -89,6 +162,30 @@ public class RecivaPortalRest
 
    }
 
+   @POST
+   @Path("/{name}")
+   @Produces(MediaType.TEXT_PLAIN)
+   @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+   public Response postAny(@PathParam("name") String path, 
+   		@Context UriInfo ui,  
+   		@Context HttpHeaders headers,
+   		byte[] messageBody) 
+   {
+   	log.info("postAny: path:" + path);
+   	log.info("postAny: body length: " + messageBody.length);
+   	String body = doAny(path, ui, headers);
+   	
+   	ResponseBuilder responseBuilder = Response.status(200);
+      responseBuilder.entity("postAny: path:" + path);
+      responseBuilder.lastModified(new Date());
+      responseBuilder.header("Content-Length", "" + body.getBytes().length);
+      responseBuilder.entity(body);
+      return responseBuilder.build();
+
+   }
+
+    
+   
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
       String challenge = "55667788";
@@ -109,59 +206,25 @@ public class RecivaPortalRest
       // cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
       Response response;
       Status rspstat = getResponseStatus();
+      
+      // Finally received a GET request for challenge (with the URL /portal-newformat.
+      // It was followed by a POST request for session... the next phase begins, but first some tidy up.
     
-      // Noticed a difference between repsonses from UPNP servers and the tomcat 10 server.
-      // THe UPNP responses are logged as
-      // HTTP/1.1 200 OK
-      // but the tomcat responses are logged as
-      // HTTP/1.1 200 200
-      // I was assuming the ir.log message "OPSEL:Unknown result code: 200" was referring to the
-      // numeric code but maybe it is expecting "OK" and consequently does not understand "200"?
-      // To really fork things up those who spend their days forking other people up have come up with
-      // a great way to really shaft me - they removed the sending of the reason phrase from tomcat.
-      // THey didn't just make it optional, no they completly removed it. Appartently that last version to
-      // support it is tomcat 8. None of this code will work with tomcat 8 because the self-same barstewards
-      // changed the package names of all the Java WS classes! Fork and Shirt! So it will take weeks to test
-      // whether my theory is correct... as I'll need to install a second old tomcat and configure it to be used
-      // instead of the default one for the portal requests, then re-write this code... FORKING HELL!
-      // Looks like I will have to go with a Jetty server instead of tomcat (having read some of the discussions
-      // about this change I can only conclude that tomcat devs really are a bunch of grassholes - it seems that checking the
-      // phrase is not uncommon in embedded systems, like the radio, and the tomcat devs response to making millions
-      // of devices inoperable? Fork you, stupid user, you should known better and bought a better device!!)
+      // NB. tomcat strips out the reasonphrase, and the apache server-tomcat interface puts something else in its place!
    	ResponseBuilder responseBuilder = Response.status(rspstat.getStatusCode(), "Ok"); //rspstat.getReasonPhrase());
-   	
-            // OK);           OPSEL:Unknown result code: 200
-   	      // CREATED);      OPSEL:Unknown result code: 201
-   	      // ACCEPTED);     OPSEL:Unknown result code: 202
-   	      // NO_CONTENT);   OPSEL:Unknown result code: 204
-            // RESET_CONTENT);OPSEL:Unknown result code: 205
-   	      // UNAUTHORIZED)  OPSEL:Bad error code back from curl: HTTP response code said error
    	
       responseBuilder.lastModified(cal.getTime());
       cal.add(Calendar.DAY_OF_MONTH,1);
       responseBuilder.expires(cal.getTime());
-      
-      
-      responseBuilder.location(URI.create("/portal/location")); //  ui.getBaseUri());
-      
-      // location expands the relative path to a full URL but contentLocation just leaves it as a relative URL,
-      // so invent a full URL for now.
-      responseBuilder.contentLocation(URI.create("http://www.reciva.com/portal/content-location"));
       responseBuilder.encoding("UTF-8");
       responseBuilder.header("Content-Length", "" + challenge.getBytes().length);
-      // responseBuilder.header("WWW-Authenticate", "Basic realm=\"User visible realm\""); // for UNAUTHORIZED
-      
-      //responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
-      //responseBuilder.type(MediaType.TEXT_XML);
       responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
-      // ir contains this text 'X-Reciva-Challenge-Format: sernum' making me think it is something the the radio adds to 
-      // a request rather than expects in the response.
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       // x-reciva-session-id
       responseBuilder.header("X-Reciva-Session-Id", challenge);
       // reciva-token
       responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal");
-      //if(!bHead)
+      if(!bHead)
       {
       	responseBuilder.entity(challenge.getBytes());
       }
