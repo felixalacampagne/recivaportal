@@ -95,13 +95,17 @@ public class RecivaPortalRest
 	      		+ "</station></stations>";
 	   	body =  "<stations></stations>";
 	   	
+	   	
+	   	byte[] authbytes = Utils.base64ToByteArray(auth);
+	   	log.info("postSession: auth bytes:\n" + dumpBuffer(authbytes));
+	   	
 	   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
 	   	RecivaEncryption renc = new RecivaEncryption();
 	   	
 	   	
 	   	byte [] payload = rph.makeFirstDataBlock(body);
 
-//	   	payload = renc.recivaDESencrypt(payload);
+	   	payload = renc.recivaDESencrypt(payload);
 	   	ResponseBuilder responseBuilder = Response.status(200);
 	 
 	      

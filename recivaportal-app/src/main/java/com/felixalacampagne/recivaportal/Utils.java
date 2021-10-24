@@ -1,5 +1,10 @@
 package com.felixalacampagne.recivaportal;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,5 +121,92 @@ public class Utils
       }
  
       return sb.toString();
+   }
+   
+   public static byte[] base64ToByteArray(String strb64)
+   {
+      if(strb64 == null)
+         return null;
+
+   // Initial size of bos can be the theoretical max size since the bos keeps track
+   // of the number of valid entries.
+   ByteArrayOutputStream bos = new ByteArrayOutputStream((strb64.length() * 3) / 4);
+   ByteArrayInputStream bis = new ByteArrayInputStream(strb64.getBytes());
+   byte [] clrbuf = null;
+
+     try
+     {
+        base64ToBytes(bis, bos);
+        clrbuf = bos.toByteArray();
+        bos.close();
+        bis.close();
+     }
+     catch(Exception ex)
+     {
+        ex.printStackTrace();
+     }
+     return clrbuf;
+   }
+
+
+   public static int base64ToBytes(InputStream strb64, OutputStream outclr)
+   {
+   char a = 0;
+   int dat;
+   //int datidx = 0;
+   int o = 0;
+   int restBit = 8;
+   int prevBit = 0;
+   int ic = 0;
+
+     if(strb64 == null)
+        return 1;
+
+     try
+     {
+     while((ic = strb64.read()) > -1)
+      {
+         a = (char) ic;
+         if ( a == '=' ) break;
+         if (a >= 'A' && a <= 'Z')
+            o = a - 'A';
+         else if (a >= 'a' && a <= 'z')
+            o = a - 'a' + 26;
+         else if (a >= '0' && a <= '9')
+            o = a - '0' + 52;
+         else if (a == '+')
+            o = 62;
+         else if (a == '/')
+            o = 63;
+         else continue;
+         if (restBit > 6)
+         {
+            prevBit = (prevBit<<6) | o;
+            restBit -= 6;
+         }
+         else
+         {
+            dat = (prevBit << restBit) | ((o >> (6-restBit)) & 0x3f);
+            restBit = 2+restBit;
+            prevBit = o;
+
+            //outbuf[datidx] = (byte) dat;
+            //datidx++;
+            outclr.write(dat);
+         }
+      }
+
+      // No nice way to truncate an existing array so have to copy to a
+      // new one. Maybe need to use something else to store the output
+      // although I guess all methods will end up duplicating the data.
+      //retbuf = new byte[datidx];
+      //System.arraycopy(outbuf, 0, retbuf, 0, datidx);
+     }
+     catch(Exception ex)
+     {
+        ex.printStackTrace();
+     }
+      //return retbuf;
+      return 0;
    }
 }

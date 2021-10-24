@@ -1,12 +1,15 @@
 package com.felixalacampagne.recivaportal;
 
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
@@ -23,10 +26,17 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 private static final String DES_ALGORITHM = "DES";
 private static final byte [] DESIV = { (byte)0xBD, (byte)0xE7, (byte)0x32, (byte)0x66, 
 		                                 (byte)0xb9, (byte)0x46, (byte)0xF3, (byte)0xAB };
-private SecretKeySpec deskey;
-private Cipher cipher;
+private final Key deskey;
+private final Cipher cipher;
 
-	public RecivaEncryption() throws NoSuchAlgorithmException, NoSuchPaddingException
+	public RecivaEncryption(byte [] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+	{
+		deskey = new SecretKeySpec(key, DES_ALGORITHM);
+		cipher = Cipher.getInstance(DES_ALGORITHM);
+	}
+	
+
+	public RecivaEncryption() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
 	{
 		deskey = new SecretKeySpec(DESIV, DES_ALGORITHM);
 		cipher = Cipher.getInstance(DES_ALGORITHM);

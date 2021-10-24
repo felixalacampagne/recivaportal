@@ -14,15 +14,10 @@ I was hoping that the greedy barstewards responsible for switching off the reciv
 24-Oct-2021 Seem to be heading in a good direction. The POST request contains a 256 binary data block. This appears to fit with what is described in the 'Encryption on Reciva' aticle. So now I've got to figure out how to decrypt the block, and potentially encrypt something to send back...  
 
 Now I realise why I'm seeing the GET and POST requests! I'd assumed when I set up the Technitium DNS that the initial requests made by the radio were to the reciva.com domain but actually they are to domains like 'portal9.7803986842.com'. So when I switched to the Technitium DNS the initial requests from the radio are going to the original servers and I guess one of them must be still working and issue a redirect to a reciva.com server. I guess is what the radio is expecting this redirect which is why it only does a HEAD request. 
-This is confirmed from the radio log. The HEAD request 'http://portal14.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476' receives an HTTP redirect to 'http://p1.ext.h3.west.us.reciva.com/portal-newformat/challenge?serial=0000df34&sp=v257-a-865-a-476'. This means I will need to find a way of doing such a redirect
-for the '/portal' - this could easily be handled by the Java app if it wasn't for the problem with tomcat forcing the root
-of the url to be the name of the war file...
-
-Tried responding to the /session POST request with a 'Type1' encrypted data block with a bit of XML.The radio log has a hex dump of the 264 bytes followed by 'OPSEL:Unable to decrypt session key'. I guess more investigation is required here...
-
-The size of the block sent with the /session request is puzzling. How come it's 256 bytes if encrypting 256 bytes actually produces 264 bytes of encrypted data? Is it actually encrypted? Is the original and encyrpted data less than 256 bytes and the encrypted data padded randomly to 256?  
-
-Tried sending clear data in response to /session. Radio log assumes the data is encrypted so still gives 'OPSEL:Unable to decrypt session key'
+This is confirmed from the radio log. The HEAD request 'http://portal14.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476' receives an HTTP redirect to 'http://p1.ext.h3.west.us.reciva.com/portal-newformat/challenge?serial=0000df34&sp=v257-a-865-a-476'. This means I will need to find a way of doing such a redirect for the '/portal' - this could easily be handled by the Java app if it wasn't for the problem with tomcat forcing the root of the url to be the name of the war file...  
+Seem to have handled it with the following httpd.conf entry:  
+RedirectMatch "^/portal/(.*)" "http://chris.reciva.com/portal-newformat/$1"  
+and an update in the Technitium DNS for '7803986842.com'  
 
 23-Oct-2021 So I'd more or less given up trying to get this to work but today I noticed a slightly different message on
 the radio so I though I'd check the logs and maybe see if the RollingFileAppender thing was finally doing what it said on
@@ -119,6 +114,16 @@ requests - not sure whether that will really help much but you never know.
 Maybe the first thing to do is send back a 'Type 2' block and see what happens. It could contain an empty 'stations'
 block on the off chance it is accepted. If the radio responds with another request then send back as 'Type 3' block.
 To encrypt these responses I'll try using the 'initialization vectors' from the article.
+
+Tried responding to the /session POST request with a 'Type2' encrypted data block with a bit of XML as payload. The 256 byte block is 264 bytes when encrypted. The radio log has a hex dump of the 264 bytes followed by 'OPSEL:Unable to decrypt session key'. I guess more investigation is required here...
+
+The size of the block, ie. the Type 1 block, received with the /session request is puzzling. How come it's 256 bytes if encrypting 256 bytes actually produces 264 bytes of encrypted data? Is it actually encrypted? Is the original and encyrpted data less than 256 bytes and the encrypted data padded randomly to 256?  
+
+Tried sending clear data in response to /session. Radio log assumes the data is encrypted so still gives 'OPSEL:Unable to decrypt session key'
+
+Thought the sharpfin patchserver code might provide some insights since the article suggests that encryption is required to receive a patch file. In github the patchserver code contains nothing about encryption, the patchfile is sent 'as-is'.
+
+Maybe I need to do the DES encryption using the 'auth' parameter...
 
 ## The reciva protocol
 
@@ -241,7 +246,7 @@ Saw this the site talking about decrypting the traffic between the radio and the
 **NB** Assumes DNS is setup to point to the local reciva portal.  
 Get the log enable file
 
-    wget "http://www.reciva.com/portal/sharpfin/log_enabled.txt"
+    wget "http://www.reciva.com/portal-newformat/sharpfin/log_enabled.txt"
 
 
 ## On the net
@@ -250,12 +255,7 @@ https://iradioforum.net/forum/index.php?topic=2968.15
 http://www.megapico.co.uk/sharpfin/mediaserver.html  
 https://leo.pfweb.eu/dl/JMCi1  
 http://www.g3gg0.de/wordpress/reversing/reciva-encryption-on-reciva-barracuda/  
-
-DNS Server code
-https://github.com/dnsjava/dnsjava. This looks complicated (it is!!)
-https://github.com/Coursal/DNS-Server This looks simpler (doesn't work!)
-
-
+https://github.com/philsmd/sharpfin - sharpfin source code  
 
 Might need the app to respond to both /portal and /server which means it must be deployed
 as the tomcat ROOT. This can be done by renaming the portal.war to ROOT.war. There is also
