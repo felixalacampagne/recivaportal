@@ -24,6 +24,8 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 //	For DES: \xbd\xe7\x32\x66\xb9\x46\xf3\xab
 //	For 3DES: \xed\x9e\xa8\x97\x7c\xee\xc8\xac
 private static final String DES_ALGORITHM = "DES";
+private static final String DES_TRANSFORM = "DES"; // Transform makes no difference to the size fo the encrypted data "DES/ECB/PKCS5Padding";
+
 private static final byte [] DESIV = { (byte)0xBD, (byte)0xE7, (byte)0x32, (byte)0x66, 
 		                                 (byte)0xb9, (byte)0x46, (byte)0xF3, (byte)0xAB };
 private final Key deskey;
@@ -31,15 +33,20 @@ private final Cipher cipher;
 
 	public RecivaEncryption(byte [] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
 	{
+		cipher = Cipher.getInstance(DES_TRANSFORM);
 		deskey = new SecretKeySpec(key, DES_ALGORITHM);
-		cipher = Cipher.getInstance(DES_ALGORITHM);
 	}
 	
 
 	public RecivaEncryption() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
 	{
+		String calg = null;
+		cipher = Cipher.getInstance(DES_TRANSFORM);
+		// Forking Java: can't use the getAlgorithm method to create the secret key
+		// because it returns the "transformation" as specified in Cipher.getInstance
+		// and that is not compatible with Cipher.init: InvalidKeyException: Wrong algorithm: DES required
+//		calg = cipher.getAlgorithm();
 		deskey = new SecretKeySpec(DESIV, DES_ALGORITHM);
-		cipher = Cipher.getInstance(DES_ALGORITHM);
 	}
 	
 	public byte[] recivaDESencrypt(byte [] clearbytes) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException

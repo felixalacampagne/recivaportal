@@ -2,8 +2,14 @@ package com.felixalacampagne.recivaportal;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +128,41 @@ public class Utils
  
       return sb.toString();
    }
+
+   public static void dumpToFile(String fname, byte [] data)
+   {
+   	File file = new File(fname);
+   	
+   	try(FileOutputStream fos = new FileOutputStream(file))
+		{
+			
+			fos.write(data);
+			log.debug("dumpToFile: data dumped to '" + file.getAbsolutePath() + "'");
+
+		}
+		catch (IOException e)
+		{
+			log.error("dumpToFile: failed to dump data '" + file.getAbsolutePath() + "'", e);
+		}
+ 
+   }   
+   
+   public static void base64ToFile(String fname, String strb64)
+   {
+   	File file = new File(fname);
+   	ByteArrayInputStream bis = new ByteArrayInputStream(strb64.getBytes());
+   	try(FileOutputStream fos = new FileOutputStream(file))
+		{
+			
+			base64ToBytes(bis, fos);
+
+		}
+		catch (IOException e)
+		{
+			log.error("base64ToFile: failed to decode base64 string to '" + file.getAbsolutePath() + "'", e);
+		}
+ 
+   }
    
    public static byte[] base64ToByteArray(String strb64)
    {
@@ -209,4 +250,20 @@ public class Utils
       //return retbuf;
       return 0;
    }
-}
+   
+	public static String getTimestampFN()
+	{
+	   return getTimestampFN(new Date());
+	}
+	
+	public static String getTimestampFN(long date)
+	{
+	   return getTimestampFN(new Date(date));
+	}
+	public static String getTimestampFN(Date date)
+	{
+	SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmm");
+	   
+	   return sdf.format(date);
+	}
+  }

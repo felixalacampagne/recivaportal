@@ -81,6 +81,7 @@ public class RecivaPortalRest
 	   	log.info("postSession: request path: " + path);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
+	   	Utils.dumpToFile("session_body" + Utils.getTimestampFN() + ".dat", messageBody);
 	   	String body = doAny(path, ui, headers);
 	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
@@ -93,7 +94,7 @@ public class RecivaPortalRest
 	      		+ "<genres>23</genres>\r\n"
 	      		+ "<locations>34</locations>\r\n"
 	      		+ "</station></stations>";
-	   	body =  "<stations></stations>";
+	   	body =  "0123456789ABCDEF0123456789ABCDEF"; // "<stations></stations>";
 	   	
 	   	
 	   	byte[] authbytes = Utils.base64ToByteArray(auth);
