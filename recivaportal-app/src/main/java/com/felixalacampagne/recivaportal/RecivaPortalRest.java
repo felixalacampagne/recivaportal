@@ -87,17 +87,17 @@ public class RecivaPortalRest
 	   	
 	   	Utils.dumpToFile("session_body" + Utils.getTimestampFN() + ".dat", messageBody);
 	   	String body = logRequest(path, ui, headers);
-	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
-	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
-	      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
-	      		+ "<protocol>http</protocol>\r\n"
-	      		+ "<metadata><use-metadata author=\"true\" title=\"true\"></use-metadata>\r\n"
-	      		+ "</metadata>\r\n"
-	      		+ "</stream>\r\n"
-	      		+ "</data>\r\n"
-	      		+ "<genres>23</genres>\r\n"
-	      		+ "<locations>34</locations>\r\n"
-	      		+ "</station></stations>";
+//	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
+//	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
+//	      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
+//	      		+ "<protocol>http</protocol>\r\n"
+//	      		+ "<metadata><use-metadata author=\"true\" title=\"true\"></use-metadata>\r\n"
+//	      		+ "</metadata>\r\n"
+//	      		+ "</stream>\r\n"
+//	      		+ "</data>\r\n"
+//	      		+ "<genres>23</genres>\r\n"
+//	      		+ "<locations>34</locations>\r\n"
+//	      		+ "</station></stations>";
 	   	body =  "0123456789ABCDEF"; // "<stations></stations>";
 	   	
 	   	
@@ -106,7 +106,7 @@ public class RecivaPortalRest
 	   	RecivaEncryption renc = new RecivaEncryption(auth);
 	   	
 	   	
-	   	byte [] payload = rph.makeSessionRepsonse(body);
+	   	byte [] payload = rph.makeSessionResponse(body);
 
 	   	payload = renc.recivaDESencrypt(payload);
 	   	ResponseBuilder responseBuilder = Response.status(200);

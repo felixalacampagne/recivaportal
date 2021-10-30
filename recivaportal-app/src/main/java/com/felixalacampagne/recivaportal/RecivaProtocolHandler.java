@@ -65,12 +65,8 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
 		// It could mean that only the real data in the block is summed, ie. header and payload.
 		
-		long sum = 0;
-		for(i=0; i < 255; i++)
-		{
-			sum += type1[i];
-		}
-		type1[255] = (byte)(sum & 0xFF);
+		byte chksum = getCheckSum(type1, type1.length-2);
+		type1[type1.length-1] = chksum;
 		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
 		return type1;
 	}
@@ -78,7 +74,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 	// have no clue what is supposed to go in here since I haven't managed to decrypt
 	// the session request, or if I have I don't know what the data means.
 	// Try with just the payload, eg. 32byte session key, padding and checksum
-	public byte [] makeSessionRepsonse(String payload)
+	public byte [] makeSessionResponse(String payload)
 	{
 		byte [] type1 = new byte[256];
 		byte[] paybytes;
@@ -114,14 +110,20 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		// Not exactly sure what is meant by a 'simple modulo 256 sum'
 		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
 		// It could mean that only the real data in the block is summed, ie. header and payload.
-		
+		byte chksum = getCheckSum(type1, type1.length-2);
+		type1[type1.length-1] = chksum;
+
+		log.debug("makeSessionResponse: data block:\n" + dumpBuffer(type1));
+		return type1;		
+	}
+
+	private byte getCheckSum(byte[] type1, int len)
+	{
 		long sum = 0;
-		for(i=0; i < 255; i++)
+		for(int i=0; i < len; i++)
 		{
 			sum += type1[i];
 		}
-		type1[255] = (byte)(sum & 0xFF);
-		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
-		return type1;		
+		return (byte)(sum % 256);
 	}
 }
