@@ -38,7 +38,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		int i = 0;
 		for(i = 8; i < 256; i++)
 		{
-			type1[i] = 0x77;
+			type1[i] = 0x77; // padding
 		}
 		
 		if(len > 246)
@@ -73,5 +73,55 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		type1[255] = (byte)(sum & 0xFF);
 		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
 		return type1;
+	}
+	
+	// have no clue what is supposed to go in here since I haven't managed to decrypt
+	// the session request, or if I have I don't know what the data means.
+	// Try with just the payload, eg. 32byte session key, padding and checksum
+	public byte [] makeSessionRepsonse(String payload)
+	{
+		byte [] type1 = new byte[256];
+		byte[] paybytes;
+		try
+		{
+			paybytes = payload.getBytes("UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// This is a stupid exception that will never happen as UTF-8 is builtin!
+			paybytes = payload.getBytes();
+		}
+		int len = paybytes.length;
+		int tmplen;
+		int i = 0;
+		int maxlen = 253; // Allows for nul terminator and checksum byte
+		if(len > maxlen)
+			len = maxlen;
+
+		for(i=0; i < len; i++)
+		{
+			type1[i] = paybytes[i];
+		}
+		type1[len++] = 0x00;
+
+		
+		for(i = len; i < 255; i++)
+		{
+			type1[i] = 0x77; // padding
+		}
+		
+		
+		// Not exactly sure what is meant by a 'simple modulo 256 sum'
+		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
+		// It could mean that only the real data in the block is summed, ie. header and payload.
+		
+		long sum = 0;
+		for(i=0; i < 255; i++)
+		{
+			sum += type1[i];
+		}
+		type1[255] = (byte)(sum & 0xFF);
+		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
+		return type1;		
 	}
 }

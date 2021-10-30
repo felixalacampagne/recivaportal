@@ -75,14 +75,18 @@ public class RecivaPortalRest
    		byte[] messageBody) 
    {
    	Response response = null;
+
    	try
    	{
 	   	String path = ui.getPath();
+	   	String authstr = Utils.base64ToString(auth); 
 	   	log.info("postSession: request path: " + path);
+	   	log.info("postSession: auth:" + auth + " -> " + authstr);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
+	   	
 	   	Utils.dumpToFile("session_body" + Utils.getTimestampFN() + ".dat", messageBody);
-	   	String body = doAny(path, ui, headers);
+	   	String body = logRequest(path, ui, headers);
 	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
 	      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
@@ -94,17 +98,15 @@ public class RecivaPortalRest
 	      		+ "<genres>23</genres>\r\n"
 	      		+ "<locations>34</locations>\r\n"
 	      		+ "</station></stations>";
-	   	body =  "0123456789ABCDEF0123456789ABCDEF"; // "<stations></stations>";
+	   	body =  "0123456789ABCDEF"; // "<stations></stations>";
 	   	
-	   	
-	   	byte[] authbytes = Utils.base64ToByteArray(auth);
-	   	log.info("postSession: auth bytes:\n" + dumpBuffer(authbytes));
 	   	
 	   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
-	   	RecivaEncryption renc = new RecivaEncryption();
+	   	
+	   	RecivaEncryption renc = new RecivaEncryption(auth);
 	   	
 	   	
-	   	byte [] payload = rph.makeFirstDataBlock(body);
+	   	byte [] payload = rph.makeSessionRepsonse(body);
 
 	   	payload = renc.recivaDESencrypt(payload);
 	   	ResponseBuilder responseBuilder = Response.status(200);
@@ -121,7 +123,10 @@ public class RecivaPortalRest
 	      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM_TYPE);
 	      //responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
 	      // x-reciva-session-id
-	      responseBuilder.header("X-Reciva-Session-Id", auth);
+	      responseBuilder.header("X-Reciva-Session-Id", body);
+
+	      // Fake header added to keep track of the request in the reciva logs
+	      responseBuilder.header("X-Reciva-Auth", authstr);
 	      // reciva-token
 	      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/");      
 	      responseBuilder.entity(payload);
@@ -145,7 +150,7 @@ public class RecivaPortalRest
    public Response getHeadAny(@PathParam("name") String path, @Context UriInfo ui, @Context HttpHeaders headers) 
    {
    	log.info("getHeadAny:" + path);
-   	doAny(path, ui, headers);
+   	logRequest(path, ui, headers);
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.lastModified(new Date());
       return responseBuilder.build();
@@ -157,7 +162,7 @@ public class RecivaPortalRest
    public Response getAny(@PathParam("name") String path, @Context UriInfo ui, @Context HttpHeaders headers) 
    {
    	log.info("getAny: path:" + path);
-   	String body = doAny(path, ui, headers);
+   	String body = logRequest(path, ui, headers);
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.entity("getAny called: path:" + path);
       responseBuilder.lastModified(new Date());
@@ -178,7 +183,7 @@ public class RecivaPortalRest
    {
    	log.info("postAny: path:" + path);
    	log.info("postAny: body length: " + messageBody.length);
-   	String body = doAny(path, ui, headers);
+   	String body = logRequest(path, ui, headers);
    	
    	ResponseBuilder responseBuilder = Response.status(200);
       responseBuilder.entity("postAny: path:" + path);
@@ -193,18 +198,8 @@ public class RecivaPortalRest
    
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = "55667788";
-//            "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
-//      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
-//      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"
-//      		+ "<protocol>http</protocol>\r\n"
-//      		+ "<metadata><use-metadata author=\"true\" title=\"true\"></use-metadata>\r\n"
-//      		+ "</metadata>\r\n"
-//      		+ "</stream>\r\n"
-//      		+ "</data>\r\n"
-//      		+ "<genres>23</genres>\r\n"
-//      		+ "<locations>34</locations>\r\n"
-//      		+ "</station></stations>";
+      String challenge = RecivaChallengeProvider.getNextChallenge(); // "00000000"; // Use 3030303030303030 for sread
+
       // Date lm = new Date(108,1,1,12,0); // 1 Jan 2008 12:00
       // Typical Java: deprecate something nice and simple and replace it with multiple lines of code
       Calendar cal = Calendar.getInstance();
@@ -240,11 +235,12 @@ public class RecivaPortalRest
       return response;
    }
    
-	private String doAny(String path, UriInfo ui, HttpHeaders headers)
+	private String logRequest(String path, UriInfo ui, HttpHeaders headers)
 	{
-		log.info("doAny: path:" + path);
-		log.debug("doAny: params\n" + getQueryParamsString(ui));
-		log.debug("doAny: headers\n" + getHeadersString(headers)); 
+		log.info("logRequest: path:" + path);
+		log.debug("logRequest: Request URL:\n" + ui.getRequestUri().toASCIIString());
+		log.debug("logRequest: params\n" + getQueryParamsString(ui));
+		log.debug("logRequest: headers\n" + getHeadersString(headers)); 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Request URL:\n").append(ui.getRequestUri().toASCIIString()).append("\n\n");
 		sb.append("Request Header:\n").append(getHeadersString(headers)).append("\n\n");

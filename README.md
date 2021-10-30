@@ -125,6 +125,41 @@ Thought the sharpfin patchserver code might provide some insights since the arti
 
 Maybe I need to do the DES encryption using the 'auth' parameter...
 
+
+## sread
+
+killall sernum ; /usr/bin/sernum --daemon
+./sread -c 3030303030303030   Use the hex code for the bytes ie. 0 = 30
+
+Key: 7b3970508744e215
+
+For a given input the the key result from sread is the same. The big bummer is that using the same input a second time results in an error return from sernum. I tried 15 different inputs but still the first number could not be used. sernum forgets the previous inputs when it is restarted.
+Tried many more inputs and eventually the original input can be reused - so in theory I can create a mapping between challenge and session request
+key (for the sernum on my radio!) - this is good news but a pain in the butt as I need to keep track of which challenge responses have been sent.
+Looks like I need 21 challenges and their corresponding keys (why 21??). This is what I used as input to sernum:
+./sread -c 3030303030303031 >>/tmp/sread.log
+./sread -c 3030303030303032 >>/tmp/sread.log
+./sread -c 3030303030303033 >>/tmp/sread.log
+./sread -c 3030303030303034 >>/tmp/sread.log
+./sread -c 3030303030303035 >>/tmp/sread.log
+./sread -c 3030303030303036 >>/tmp/sread.log
+./sread -c 3030303030303037 >>/tmp/sread.log
+./sread -c 3030303030303038 >>/tmp/sread.log
+./sread -c 3030303030303039 >>/tmp/sread.log
+./sread -c 303030303030303A >>/tmp/sread.log
+./sread -c 303030303030303B >>/tmp/sread.log
+./sread -c 303030303030303C >>/tmp/sread.log
+./sread -c 303030303030303D >>/tmp/sread.log
+./sread -c 303030303030303E >>/tmp/sread.log
+./sread -c 303030303030303F >>/tmp/sread.log
+./sread -c 3030303030303130 >>/tmp/sread.log
+./sread -c 3030303030303131 >>/tmp/sread.log
+./sread -c 3030303030303132 >>/tmp/sread.log
+./sread -c 3030303030303133 >>/tmp/sread.log
+./sread -c 3030303030303134 >>/tmp/sread.log   
+
+
+
 ## The reciva protocol
 
 From the 'Encryption on Reciva' article...  

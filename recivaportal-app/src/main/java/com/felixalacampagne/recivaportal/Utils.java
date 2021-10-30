@@ -3,6 +3,7 @@ package com.felixalacampagne.recivaportal;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +18,33 @@ import org.slf4j.LoggerFactory;
 public class Utils
 {
 	static final Logger log = LoggerFactory.getLogger(Utils.class);
+
 	
+	
+	public static byte[] readFileToBytes(String fname)
+	{
+		return readFileToBytes(new File(fname));
+	}
+	
+	private static byte[] readFileToBytes(File file)
+	{
+		byte [] bytes = null;
+
+		try(FileInputStream fis = new FileInputStream(file))
+		{
+			bytes = new byte [ (int) file.length() ];
+			fis.read(bytes);
+			// fis Autocloses
+		}
+		catch (IOException e)
+		{
+			log.error("Failed to read bytes from " + file.getAbsolutePath(), e);
+		}
+
+		
+		return bytes;
+	}
+
 	public static String dumpBuffer(byte[] data)
    {
 		return dumpBuffer(data, false);
@@ -164,6 +191,13 @@ public class Utils
  
    }
    
+
+   public static String base64ToString(String strb64)
+   {
+   	// For consistency in conversions
+   	return new String(base64ToByteArray(strb64));
+   }
+   
    public static byte[] base64ToByteArray(String strb64)
    {
       if(strb64 == null)
@@ -266,4 +300,33 @@ public class Utils
 	   
 	   return sdf.format(date);
 	}
-  }
+	
+	// Ripped from baeldung to save time
+	public static byte[] decodeHexString(String hexString) {
+		Utils utils = new Utils();
+	    if (hexString.length() % 2 == 1) {
+	        throw new IllegalArgumentException(
+	          "Invalid hexadecimal String supplied.");
+	    }
+	    
+	    byte[] bytes = new byte[hexString.length() / 2];
+	    for (int i = 0; i < hexString.length(); i += 2) {
+	        bytes[i / 2] = utils.hexToByte(hexString.substring(i, i + 2));
+	    }
+	    return bytes;
+	}
+	private byte hexToByte(String hexString) {
+	    int firstDigit = toDigit(hexString.charAt(0));
+	    int secondDigit = toDigit(hexString.charAt(1));
+	    return (byte) ((firstDigit << 4) + secondDigit);
+	}
+
+	private int toDigit(char hexChar) {
+	    int digit = Character.digit(hexChar, 16);
+	    if(digit == -1) {
+	        throw new IllegalArgumentException(
+	          "Invalid Hexadecimal Character: "+ hexChar);
+	    }
+	    return digit;
+	}	
+}

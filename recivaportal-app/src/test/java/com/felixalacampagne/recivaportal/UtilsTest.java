@@ -27,10 +27,12 @@ class UtilsTest
 	}
 
 	@Test
-	void testbase64ToByteArray()
+	void testbase64ToByteArray() throws UnsupportedEncodingException
 	{
-	String base64 = "NTU2Njc3ODg=";
+	String base64 = "MDAwMDAwMDA=";
 	byte [] bytes = Utils.base64ToByteArray(base64);
+	String strbytes = new String(bytes);
 	System.out.println("base64: " + base64 + "->\n" + Utils.dumpBuffer(bytes));
+	System.out.println("String result: " + strbytes);
 	}
 }
