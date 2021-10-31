@@ -57,43 +57,53 @@ class RecivaEncryptionTest
 		String hexkey = null; 
 		byte [] key = null;
 		RecivaEncryption renc = null;
-		byte chksum = 0;
+		RecivaProtocolHandler rph = new RecivaProtocolHandler();
+		int chksum = 0;
 		try
 		{
+			String hexchallenge = "";
+			String fname = "";
 			// C:\Development\apache-tomcat-10.0.0\session_body_3030303030303030_2110311149.dat
-			encbytes = Utils.readFileToBytes("E:\\Development\\workspace\\recivaportal\\tmp\\session_body_3030303030303030_2110311149.dat");
-			RecivaChallenge rcvclg = RecivaChallengeProvider.getChallenge("3030303030303030");
+			String dir = "E:\\Development\\workspace\\recivaportal\\tmp\\session_body_";
+			hexchallenge = "3030303030303030";
+			fname =
+					dir + hexchallenge 
+//					+ "_2110311647.dat" // 4
+//					+ "_2110311634.dat" // 3
+//					+ "_2110311134.dat" // 0
+//					+ "_2110311143.dat" // 0
+					+ "_2110311149.dat" // 0
+					;
+
+			
+			encbytes = Utils.readFileToBytes(fname);
+			RecivaChallenge rcvclg = RecivaChallengeProvider.getChallenge(hexchallenge);			
 			//hexkey = "e623fc320ee37784";
 			key = rcvclg.getKey(); //.decodeHexString(hexkey);
 			renc = new RecivaEncryption(key);
 			clearbytes = renc.recivaDESdecrypt(encbytes);
-			chksum = getCheckSum(clearbytes, clearbytes.length-2);
-			log.info("testRecivaDESencrypt(key): byte[255]: actual " + String.format("%02X", clearbytes[255]) 
-						+ ", expected " + String.format("%02X", chksum));
 
 			// Finally figured out that the first 8bytes of the decrypted challenge response should match the
 			// sread 'challenge response'.
 			byte [] clgrsp = rcvclg.getChallengeResponse();
 			byte [] rcvrsp = Arrays.copyOf(clearbytes, clgrsp.length);
 			
-			assertArrayEquals(clgrsp, rcvrsp, "Compare expected challenge response with decrypted received response");
+			assertArrayEquals(clgrsp, rcvrsp, "Compare expected challenge response with that in the decrypted received data");
+			
+			byte [] newenc = renc.recivaDESencrypt(clearbytes);
+			assertArrayEquals(encbytes, newenc, "Compare reencrypted data with original encrypted data");
+			
+			int origchksum = ((int) clearbytes[clearbytes.length-1]) & 0xFF;
+			chksum = rph.getCheckSum(clearbytes, clearbytes.length-1);
+			log.info("testRecivaDESdecrypt: chksum diff orig-calc: " + origchksum + " + " + chksum + " = " + (origchksum - chksum)); 
+			assertEquals(origchksum, chksum, "Compare expected checksum with that present in the decrypted received data");
 			
 			
-			// In theory the checksum should be correct?
+
 		}
 		catch (Exception e)
 		{
 			log.error("Encryption failed:", e );
 		}
-	}
-	
-	private byte getCheckSum(byte[] type1, int len)
-	{
-		long sum = 0;
-		for(int i=0; i < len; i++)
-		{
-			sum += type1[i];
-		}
-		return (byte)(sum % 256);
 	}
 }

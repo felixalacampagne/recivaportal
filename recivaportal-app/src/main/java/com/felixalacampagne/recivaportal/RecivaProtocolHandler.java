@@ -64,9 +64,9 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		// Not exactly sure what is meant by a 'simple modulo 256 sum'
 		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
 		// It could mean that only the real data in the block is summed, ie. header and payload.
+		int chksum = getCheckSum(type1, type1.length-1);
+		type1[type1.length-1] = (byte)(chksum & 0xFF);
 		
-		byte chksum = getCheckSum(type1, type1.length-2);
-		type1[type1.length-1] = chksum;
 		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
 		return type1;
 	}
@@ -88,7 +88,6 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 			paybytes = payload.getBytes();
 		}
 		int len = paybytes.length;
-		int tmplen;
 		int i = 0;
 		int maxlen = 253; // Allows for nul terminator and checksum byte
 		if(len > maxlen)
@@ -98,7 +97,9 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		{
 			type1[i] = paybytes[i];
 		}
-		type1[len++] = 0x00;
+		
+		// Don't know if a nul terminator is required for this
+		//type1[len++] = 0x00;
 
 		
 		for(i = len; i < 255; i++)
@@ -110,20 +111,28 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		// Not exactly sure what is meant by a 'simple modulo 256 sum'
 		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
 		// It could mean that only the real data in the block is summed, ie. header and payload.
-		byte chksum = getCheckSum(type1, type1.length-2);
-		type1[type1.length-1] = chksum;
+		int chksum = getCheckSum(type1, type1.length-1);
+		type1[type1.length-1] = (byte)(chksum & 0xFF);
 
 		log.debug("makeSessionResponse: data block:\n" + dumpBuffer(type1));
 		return type1;		
 	}
 
-	private byte getCheckSum(byte[] type1, int len)
+
+	public int getCheckSum(byte[] type1, int len)
 	{
-		long sum = 0;
+		long sum = 0; // -10;
+		log.info("getCheckSum: starting with seed: " + String.format("%08x", sum));
+		long ubyte = 0;
 		for(int i=0; i < len; i++)
 		{
-			sum += type1[i];
+			ubyte = ((long) type1[i]) & 0xFF;
+			sum += ubyte;
+			
+			// This should not make any difference
+			sum &= 0xFF;
 		}
-		return (byte)(sum % 256);
+
+		return (int)(sum & 0xFF);
 	}
 }

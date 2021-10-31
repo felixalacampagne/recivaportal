@@ -11,6 +11,33 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The story so far
+
+30-Oct-2021 Still trying ot get past 'OPSEL:Unable to decrypt session key'. Thought I was making some progress but once again I've hit a brick wall...  
+
+A couple of things have been learnt;  
+ - the output from sernum is reproducible for a given input.
+ - the same input cannot be used twice in a row. Fortunately input can be repeated after 21 different inputs. I've implemented 21 different challenges
+   and captured the sernum output for them and the webserver cycles through them to ensure it doesn't return the same response too soon. This
+   might need to be expanded if desynchronization due to the weberver going down more often than the radio becomes an issue.
+ - the decryption is working! Confirmed that the first part of the session request data is the 'challenge-response' value from sernum.
+ - the encryption is probably working since re-encrypting the data from the radio produces a matching array
+ - the checksum calculated for the challenge response data matches the one in the data so the checksum calculation is probably correct.
+ - radio still says it can't decrypt the session key...  
+
+Problem is that I don't know what is supposed to be in the session response. I've tried a couple of things previously but since there was a bug with the checksum calculation they need to be tried again. So far I've done;  
+ - 16bytes with a nul terminator
+ 
+To try;
+ - 16bytes without a nul terminator - no good
+ - remove the X-Reciva-Session-Id header from the response - no good
+ - a data block as described for file transfer, eg. with a length header - no good
+ - encrypt with the challenge response instead of the key - no good
+ - some other form of encryption. Maybe it needs 3DES, or even AES. But how to get the keys since 'sread' doesn't appear to provide them, unless
+   that is what the 'MAC' is supposed to be. The MAC does happen to be three times the length of the other 'keys'. The 'Encryption on Reciva' post
+   claims the encryption of file download check blocks uses 3DES. The python script claims it used AES with the session key. They oth appear to agree
+   on the decrypting of the session response needed DES with the challenge response key... so i've run out of ideas again...  b
+
+
 24-Oct-2021 Seem to be heading in a good direction. The POST request contains a 256 binary data block. This appears to fit with what is described in the 'Encryption on Reciva' aticle. So now I've got to figure out how to decrypt the block, and potentially encrypt something to send back...  
 
 Now I realise why I'm seeing the GET and POST requests! I'd assumed when I set up the Technitium DNS that the initial requests made by the radio were to the reciva.com domain but actually they are to domains like 'portal9.7803986842.com'. So when I switched to the Technitium DNS the initial requests from the radio are going to the original servers and I guess one of them must be still working and issue a redirect to a reciva.com server. I guess is what the radio is expecting this redirect which is why it only does a HEAD request. 

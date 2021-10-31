@@ -105,10 +105,10 @@ public class RecivaPortalRest
 	   	
 	   	
 	   	
-	   	byte [] payload = rph.makeSessionResponse(body);
+	   	byte [] payload = rph.makeSessionResponse(body); // rph.makeFirstDataBlock(body);
 
 	   	RecivaEncryption renc = new RecivaEncryption(auth);
-	   	payload = renc.recivaDESencrypt(payload);
+	   	payload = renc.recivaDESCRencrypt(payload);
 	   	
 	   	ResponseBuilder responseBuilder = Response.status(200);
 	      Calendar cal = Calendar.getInstance();
@@ -119,9 +119,9 @@ public class RecivaPortalRest
 	      responseBuilder.encoding("UTF-8");
 	      responseBuilder.header("Content-Length", "" + payload.length);
 	      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM_TYPE);
-	      //responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
+	      responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
 	      // x-reciva-session-id
-	      responseBuilder.header("X-Reciva-Session-Id", body);
+	      //responseBuilder.header("X-Reciva-Session-Id", body);
 
 	      // Fake header added to keep track of the request in the reciva logs
 	      responseBuilder.header("X-Reciva-Auth", authstr);
