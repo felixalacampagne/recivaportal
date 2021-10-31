@@ -1,4 +1,19 @@
-while read line; do echo $line; done << EOF
+SREAD=/mnt/config/sread
+LOG=/tmp/log/getchal.log
+
+dosread()
+{
+chal=$1
+echo Challenge:>>$LOG
+echo $chal >>$LOG
+$SREAD -c $chal >>$LOG
+}
+
+killall sernum
+/usr/bin/sernum --daemon
+mkdir -p /tmp/log
+echo SREAD Challenges>$LOG
+while read line; do dosread $line; done << EOF
 3030303030303030
 3030303030303031
 3030303030303032
@@ -21,3 +36,5 @@ while read line; do echo $line; done << EOF
 3030303030303133
 3030303030303134
 EOF
+
+echo Challenges written to $LOG

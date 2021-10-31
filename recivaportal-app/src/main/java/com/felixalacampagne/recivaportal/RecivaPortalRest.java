@@ -85,7 +85,7 @@ public class RecivaPortalRest
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
 	   	
-	   	Utils.dumpToFile("session_body" + Utils.getTimestampFN() + ".dat", messageBody);
+	   	Utils.dumpToFile("session_body_" + authstr + "_" + Utils.getTimestampFN() + ".dat", messageBody);
 	   	String body = logRequest(path, ui, headers);
 //	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
@@ -103,17 +103,15 @@ public class RecivaPortalRest
 	   	
 	   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
 	   	
-	   	RecivaEncryption renc = new RecivaEncryption(auth);
 	   	
 	   	
 	   	byte [] payload = rph.makeSessionResponse(body);
 
+	   	RecivaEncryption renc = new RecivaEncryption(auth);
 	   	payload = renc.recivaDESencrypt(payload);
+	   	
 	   	ResponseBuilder responseBuilder = Response.status(200);
-	 
-	      
 	      Calendar cal = Calendar.getInstance();
-	      // cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
 	
 	      responseBuilder.lastModified(cal.getTime());
 	      cal.add(Calendar.DAY_OF_MONTH,1);
@@ -198,12 +196,9 @@ public class RecivaPortalRest
    
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      String challenge = RecivaChallengeProvider.getNextChallenge(); // "00000000"; // Use 3030303030303030 for sread
+      byte [] challenge = RecivaChallengeProvider.getNextChallenge().getChallenge(); // "00000000"; // Use 3030303030303030 for sread
 
-      // Date lm = new Date(108,1,1,12,0); // 1 Jan 2008 12:00
-      // Typical Java: deprecate something nice and simple and replace it with multiple lines of code
       Calendar cal = Calendar.getInstance();
-      // cal.set(2008, 1, 1, 12, 0); // 2008 is when I bought the radio - I'd like it to not bother contacting the server.
       Response response;
       Status rspstat = getResponseStatus();
       
@@ -217,16 +212,16 @@ public class RecivaPortalRest
       cal.add(Calendar.DAY_OF_MONTH,1);
       responseBuilder.expires(cal.getTime());
       responseBuilder.encoding("UTF-8");
-      responseBuilder.header("Content-Length", "" + challenge.getBytes().length);
+      responseBuilder.header("Content-Length", "" + challenge.length);
       responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       // x-reciva-session-id
-      responseBuilder.header("X-Reciva-Session-Id", challenge);
+      responseBuilder.header("X-Reciva-Session-Id", new String(challenge));  // Assume it consists of printable characters
       // reciva-token
-      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal");
+      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal-newformt");
       if(!bHead)
       {
-      	responseBuilder.entity(challenge.getBytes());
+      	responseBuilder.entity(challenge);
       }
 
       response = responseBuilder.build();

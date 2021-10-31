@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -53,21 +54,32 @@ class RecivaEncryptionTest
 	{
 		byte [] clearbytes = null;
 		byte [] encbytes = null;
-		String hexkey = "7b3970508744e215"; 
+		String hexkey = null; 
 		byte [] key = null;
-
+		RecivaEncryption renc = null;
+		byte chksum = 0;
 		try
 		{
-			encbytes = Utils.readFileToBytes("E:\\Development\\workspace\\recivaportal\\tmp\\session_body_MDAwMDAwMDA=.dat");
-			key = Utils.decodeHexString(hexkey);
-			RecivaEncryption renc = new RecivaEncryption(key);
+			// C:\Development\apache-tomcat-10.0.0\session_body_3030303030303030_2110311149.dat
+			encbytes = Utils.readFileToBytes("E:\\Development\\workspace\\recivaportal\\tmp\\session_body_3030303030303030_2110311149.dat");
+			RecivaChallenge rcvclg = RecivaChallengeProvider.getChallenge("3030303030303030");
+			//hexkey = "e623fc320ee37784";
+			key = rcvclg.getKey(); //.decodeHexString(hexkey);
+			renc = new RecivaEncryption(key);
 			clearbytes = renc.recivaDESdecrypt(encbytes);
-			log.info("testRecivaDESencrypt: DES encrypted bytes:\n" + Utils.dumpBuffer(clearbytes));
+			chksum = getCheckSum(clearbytes, clearbytes.length-2);
+			log.info("testRecivaDESencrypt(key): byte[255]: actual " + String.format("%02X", clearbytes[255]) 
+						+ ", expected " + String.format("%02X", chksum));
+
+			// Finally figured out that the first 8bytes of the decrypted challenge response should match the
+			// sread 'challenge response'.
+			byte [] clgrsp = rcvclg.getChallengeResponse();
+			byte [] rcvrsp = Arrays.copyOf(clearbytes, clgrsp.length);
 			
-			// Seems the encrypted data is larger than the original - no clue if this is correct... I've
-			// just used the actual size of the returned array so the test passed.
-			// Have to wait and see what the radio makes of it....
-			assertEquals(256, clearbytes.length, "Is array length changed"); // Stupid test just for the sake of it
+			assertArrayEquals(clgrsp, rcvrsp, "Compare expected challenge response with decrypted received response");
+			
+			
+			// In theory the checksum should be correct?
 		}
 		catch (Exception e)
 		{
@@ -75,5 +87,13 @@ class RecivaEncryptionTest
 		}
 	}
 	
-
+	private byte getCheckSum(byte[] type1, int len)
+	{
+		long sum = 0;
+		for(int i=0; i < len; i++)
+		{
+			sum += type1[i];
+		}
+		return (byte)(sum % 256);
+	}
 }

@@ -194,8 +194,8 @@ public class Utils
 
    public static String base64ToString(String strb64)
    {
-   	// For consistency in conversions
-   	return new String(base64ToByteArray(strb64));
+   	// Should return a hex representation of the bytes
+   	return new String( encodeToHex(base64ToByteArray(strb64)) );
    }
    
    public static byte[] base64ToByteArray(String strb64)
@@ -301,6 +301,8 @@ public class Utils
 	   return sdf.format(date);
 	}
 	
+	
+	// TODO tidy up and harmonise the Hex converters
 	// Ripped from baeldung to save time
 	public static byte[] decodeHexString(String hexString) {
 		Utils utils = new Utils();
@@ -329,4 +331,28 @@ public class Utils
 	    }
 	    return digit;
 	}	
+	
+	
+	// Ripped from somewhere else to save time
+	protected final static byte[] CHAR_TABLE = new byte[] { (byte) '0',
+			(byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5',
+			(byte) '6', (byte) '7', (byte) '8', (byte) '9', (byte) 'A',
+			(byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
+		/**
+		 * Copied from Tunesremote SE PairingDatabase.
+		 * I suspect there is a much easier way to do this!!!
+		 * @param code
+		 * @return
+		 */
+   public static String encodeToHex(byte[] code) {
+		// somewhat borrowed from rgagnon.com
+		byte[] result = new byte[2 * code.length];
+		int index = 0;
+		for (byte b : code) {
+			int v = b & 0xff;
+			result[index++] = CHAR_TABLE[v >>> 4];
+			result[index++] = CHAR_TABLE[v & 0xf];
+		}
+		return new String(result);
+	}  	
 }

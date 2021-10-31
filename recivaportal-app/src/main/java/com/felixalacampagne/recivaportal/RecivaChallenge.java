@@ -13,27 +13,38 @@ public RecivaChallenge(String challenge, String key)
 	this.key = key;
 }
 
-public RecivaChallenge(String challenge, String key, String challengeResponse, String mackey)
+// the parameters are hex string representations of the bytes
+public RecivaChallenge(String challenge, String challengeResponse, String key, String mackey)
 {
-	this.challenge = challenge;
+	this.challenge = challenge.toUpperCase();	
 	this.key = key;
 	this.challengeResponse = challengeResponse;
 	this.mackey  = mackey;
 }
-public String getChallenge()
+
+
+public String getHexChallenge()
 {
 	return challenge;
 }
-public String getKey()
+
+public byte[] getChallenge()
 {
-	return key;
+	return Utils.decodeHexString(challenge);
 }
-public String getChallengeResponse()
+
+public byte[] getKey()
 {
-	return challengeResponse;
+	return Utils.decodeHexString(key);
 }
-public String getMackey()
+
+public byte[] getChallengeResponse()
 {
-	return mackey;
+	return Utils.decodeHexString(challengeResponse);
+}
+
+public byte[] getMackey()
+{
+	return Utils.decodeHexString(mackey);
 }
 }
