@@ -28,6 +28,8 @@ Problem is that I don't know what is supposed to be in the session response. I'v
  - 16bytes with a nul terminator
  
 To try;
+ - just the 16 bytes, no 256 block padding, with key as encryption key - no good
+ - just the 16 bytes, no 256 block padding, with challenge response as encryption key - no good
  - 16bytes without a nul terminator - no good
  - remove the X-Reciva-Session-Id header from the response - no good
  - a data block as described for file transfer, eg. with a length header - no good

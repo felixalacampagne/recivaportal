@@ -66,8 +66,8 @@ private RecivaChallenge rc = null;
 
 	public byte[] recivaDESCRencrypt(byte [] clearbytes) throws GeneralSecurityException
 	{
-		Key crdeskey = new SecretKeySpec(rc.getChallengeResponse(), DES_ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, crdeskey, ipsDesIV);
+//		Key crdeskey = new SecretKeySpec(rc.getChallengeResponse(), DES_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, deskey, ipsDesIV);
 
 		byte[] encbytes = this.cipher.doFinal(clearbytes);
 		log.debug("recivaDESCRencrypt: encrypted data block:\n" + dumpBuffer(encbytes));

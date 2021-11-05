@@ -105,8 +105,10 @@ public class RecivaPortalRest
 	   	
 	   	
 	   	
-	   	byte [] payload = rph.makeSessionResponse(body); // rph.makeFirstDataBlock(body);
-
+	   	byte [] payload; 
+	   	payload = rph.makeSessionResponse(body); // rph.makeFirstDataBlock(body);
+	   	payload = body.getBytes();
+	   	
 	   	RecivaEncryption renc = new RecivaEncryption(auth);
 	   	payload = renc.recivaDESCRencrypt(payload);
 	   	
