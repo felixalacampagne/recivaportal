@@ -9,6 +9,7 @@ public class RecivaProtocolHandler
 {
 final Logger log = LoggerFactory.getLogger(this.getClass());
 
+// From the 'Encryption on Reciva' blog:
 //	The first data block contains an 8 byte header which contains the file size
 //	(4 bytes) and an unknown (maybe fixed) value (also 4 bytes). The header
 //	is followed by 246 bytes of payload, a single 0x00 byte and a checksum
@@ -22,7 +23,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 	// the radio from showing error messages
 	public byte[] makeFirstDataBlock(String payload)
 	{
-		byte [] type1 = new byte[256];
+		byte [] type2 = new byte[256];
 		byte[] paybytes;
 		try
 		{
@@ -38,7 +39,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		int i = 0;
 		for(i = 8; i < 256; i++)
 		{
-			type1[i] = 0x77; // padding
+			type2[i] = 0x77; // padding
 		}
 		
 		if(len > 246)
@@ -47,28 +48,28 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		tmplen = len;
 		for(i=0; i<4; i++)
 		{
-			type1[i] = (byte) (tmplen & 0xFF);
+			type2[i] = (byte) (tmplen & 0xFF);
 			tmplen >>= 8;
 		}
 		for(i=4; i<8; i++)
 		{
-			type1[i] = (byte) (0x00);
+			type2[i] = (byte) (0x00);
 		}	
 		
 		for(i=0; i < len; i++)
 		{
-			type1[i+8] = paybytes[i];
+			type2[i+8] = paybytes[i];
 		}
-		type1[len+8] = 0x00;
+		type2[len+8] = 0x00;
 		
 		// Not exactly sure what is meant by a 'simple modulo 256 sum'
 		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
 		// It could mean that only the real data in the block is summed, ie. header and payload.
-		int chksum = getCheckSum(type1, type1.length-1);
-		type1[type1.length-1] = (byte)(chksum & 0xFF);
+		int chksum = getCheckSum(type2, type2.length-1);
+		type2[type2.length-1] = (byte)(chksum & 0xFF);
 		
-		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type1));
-		return type1;
+		log.debug("makeFirstDataBlock: type1 data block:\n" + dumpBuffer(type2));
+		return type2;
 	}
 	
 	// have no clue what is supposed to go in here since I haven't managed to decrypt
@@ -76,7 +77,10 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 	// Try with just the payload, eg. 32byte session key, padding and checksum
 	public byte [] makeSessionResponse(String payload)
 	{
-		byte [] type1 = new byte[256];
+		byte [] sessionblock = new byte[256]; 
+		// check sum byte is sessionblock[255], 
+		// max null byte is sessionblock[254],
+		// max payload byte is sessionblock[253] 
 		byte[] paybytes;
 		try
 		{
@@ -89,33 +93,30 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 		}
 		int len = paybytes.length;
 		int i = 0;
-		int maxlen = 253; // Allows for nul terminator and checksum byte
+		int maxlen = sessionblock.length-2; // 254 Allows for nul terminator and checksum byte
 		if(len > maxlen)
 			len = maxlen;
 
-		for(i=0; i < len; i++)
+		for(i=0; i < len; i++) // 0 to 15
 		{
-			type1[i] = paybytes[i];
+			sessionblock[i] = paybytes[i];
 		}
 		
-		// Don't know if a nul terminator is required for this
-		//type1[len++] = 0x00;
+		// 15->16 Don't know if a nul terminator is required for this
+		sessionblock[len++] = 0x00;
 
-		
-		for(i = len; i < 255; i++)
+		// 16 -> 254
+		for(i = len; i < sessionblock.length-1; i++)
 		{
-			type1[i] = 0x77; // padding
+			sessionblock[i] = 0x77; // padding
 		}
 		
-		
-		// Not exactly sure what is meant by a 'simple modulo 256 sum'
-		// Assume that bytes in the entire block are summed and the low byte is the last byte of the block
-		// It could mean that only the real data in the block is summed, ie. header and payload.
-		int chksum = getCheckSum(type1, type1.length-1);
-		type1[type1.length-1] = (byte)(chksum & 0xFF);
+		// Assume that bytes in the entire block are check summed and the low byte is the last byte of the block
+		int chksum = getCheckSum(sessionblock, sessionblock.length-1);
+		sessionblock[sessionblock.length-1] = (byte)(chksum & 0xFF); // 255
 
-		log.debug("makeSessionResponse: data block:\n" + dumpBuffer(type1));
-		return type1;		
+		log.debug("makeSessionResponse: data block:\n" + dumpBuffer(sessionblock));
+		return sessionblock;		
 	}
 
 

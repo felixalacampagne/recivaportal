@@ -38,11 +38,16 @@ private final Key deskey;
 private final Cipher cipher;
 private RecivaChallenge rc = null;
 
-	public RecivaEncryption(String b64challenge) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+	public RecivaEncryption(String b64orhexchallenge, boolean b64) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
 	{
-		String hexchallenge = Utils.base64ToString(b64challenge);
+		String hexchallenge = b64orhexchallenge;
+		if(b64)
+		{
+			hexchallenge = Utils.base64ToString(b64orhexchallenge);
+		}
 		rc = RecivaChallengeProvider.getChallenge(hexchallenge);
 		byte [] key = rc.getKey();
+		log.debug("<init>: challenge: " + hexchallenge + " key: " + rc.getKeyHex());
 		cipher = Cipher.getInstance(DES_TRANSFORM);
 		deskey = new SecretKeySpec(key, DES_ALGORITHM);
 	
@@ -64,11 +69,11 @@ private RecivaChallenge rc = null;
 		return encbytes;
 	}
 
+	// Encrypts using the challenge response instead of the key - only for testing
 	public byte[] recivaDESCRencrypt(byte [] clearbytes) throws GeneralSecurityException
 	{
-//		Key crdeskey = new SecretKeySpec(rc.getChallengeResponse(), DES_ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, deskey, ipsDesIV);
-
+		Key crdeskey = new SecretKeySpec(rc.getChallengeResponse(), DES_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, crdeskey, ipsDesIV);
 		byte[] encbytes = this.cipher.doFinal(clearbytes);
 		log.debug("recivaDESCRencrypt: encrypted data block:\n" + dumpBuffer(encbytes));
 		return encbytes;
@@ -78,7 +83,6 @@ private RecivaChallenge rc = null;
 	public byte[] recivaDESdecrypt(byte [] encbytes) throws GeneralSecurityException
 	{
 		cipher.init(Cipher.DECRYPT_MODE, deskey, ipsDesIV);
-		byte [] iv = cipher.getIV();		
 		byte[] clearbytes = this.cipher.doFinal(encbytes);
 		log.debug("recivaDESencrypt: decrypted data block:\n" + dumpBuffer(clearbytes));
 		return clearbytes;

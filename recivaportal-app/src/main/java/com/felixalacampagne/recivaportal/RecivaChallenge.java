@@ -38,6 +38,11 @@ public byte[] getKey()
 	return Utils.decodeHexString(key);
 }
 
+public String getKeyHex()
+{
+	return key;
+}
+
 public byte[] getChallengeResponse()
 {
 	return Utils.decodeHexString(challengeResponse);

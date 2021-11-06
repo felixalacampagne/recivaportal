@@ -2,6 +2,7 @@ package com.felixalacampagne.recivaportal;
 
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -75,7 +76,8 @@ public class RecivaPortalRest
    		byte[] messageBody) 
    {
    	Response response = null;
-
+   	RecivaEncryption renc = null;
+   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
    	try
    	{
 	   	String path = ui.getPath();
@@ -84,8 +86,31 @@ public class RecivaPortalRest
 	   	log.info("postSession: auth:" + auth + " -> " + authstr);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
+	   	log.info("postSession: decryption key auth:" + auth);
+//	   	Utils.dumpToFile("session_body_" + authstr + "_" + Utils.getTimestampFN() + ".dat", messageBody);
+
+	   	String rspauth;
+	   	// This didn't work
+//	   	// Use the challenge response as a lookup for the response encryption key
+//			renc = new RecivaEncryption(auth, true);
+//			byte [] messageBodyclear = renc.recivaDESdecrypt(messageBody);
+//			int chksum = rph.getCheckSum(messageBodyclear, messageBodyclear.length-1);
+//			log.info("postSession: checksum: expected: " + chksum + " actual: " + (messageBodyclear[messageBodyclear.length-1] & 0xFF));
+//	   	byte [] clgrsp = Arrays.copyOf(messageBodyclear, 8);
+//	   	
+//
+	   	// This also didn't work
+//	   	// Use the decrypt key as input to sernum to get encrypt key
+//	   	RecivaChallenge rcvclg = RecivaChallengeProvider.getChallenge(authstr);
+//	   	byte [] key = rcvclg.getKey();
+//	   	rspauth = Utils.encodeToHex(key);
+
+
+	   	// Challenge response as lookup doesn't work so revert to using the original auth
+	   	// This doesn't work either
+	   	rspauth = auth;
 	   	
-	   	Utils.dumpToFile("session_body_" + authstr + "_" + Utils.getTimestampFN() + ".dat", messageBody);
+	   	
 	   	String body = logRequest(path, ui, headers);
 //	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
@@ -99,18 +124,16 @@ public class RecivaPortalRest
 //	      		+ "<locations>34</locations>\r\n"
 //	      		+ "</station></stations>";
 	   	body =  "0123456789ABCDEF"; // "<stations></stations>";
+ 	   	
 	   	
-	   	
-	   	RecivaProtocolHandler rph = new RecivaProtocolHandler();
-	   	
-	   	
-	   	
+	   	log.info("postSession: session response encryption key auth:" + rspauth);
 	   	byte [] payload; 
-	   	payload = rph.makeSessionResponse(body); // rph.makeFirstDataBlock(body);
-	   	payload = body.getBytes();
+	   	payload = rph.makeSessionResponse(body); 
+//	   	payload = rph.makeFirstDataBlock(body);
+//	   	payload = body.getBytes();
 	   	
-	   	RecivaEncryption renc = new RecivaEncryption(auth);
-	   	payload = renc.recivaDESCRencrypt(payload);
+	   	renc = new RecivaEncryption(rspauth, false);
+	   	payload = renc.recivaDESencrypt(payload);
 	   	
 	   	ResponseBuilder responseBuilder = Response.status(200);
 	      Calendar cal = Calendar.getInstance();
@@ -118,7 +141,7 @@ public class RecivaPortalRest
 	      responseBuilder.lastModified(cal.getTime());
 	      cal.add(Calendar.DAY_OF_MONTH,1);
 	      responseBuilder.expires(cal.getTime());
-	      responseBuilder.encoding("UTF-8");
+	      //responseBuilder.encoding("UTF-8");
 	      responseBuilder.header("Content-Length", "" + payload.length);
 	      responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM_TYPE);
 	      responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
@@ -126,7 +149,7 @@ public class RecivaPortalRest
 	      //responseBuilder.header("X-Reciva-Session-Id", body);
 
 	      // Fake header added to keep track of the request in the reciva logs
-	      responseBuilder.header("X-Reciva-Auth", authstr);
+	      responseBuilder.header("X-CPA-Auth", authstr);
 	      // reciva-token
 	      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/");      
 	      responseBuilder.entity(payload);
