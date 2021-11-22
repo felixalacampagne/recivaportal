@@ -22,6 +22,16 @@
     for the env.var.)
     -->
 		<tomcat.webapps>${env.TOMCAT_WEBAPPS}</tomcat.webapps>
+		<!-- the root name, ie. http://hostname/root/subdir, is fixed and determined by
+		     the requests coming out of the radio. Unfortunately for tomcat this name is
+		     fixed and determine by the name of the .WAR file containing the web application.
+		     There doesn't seem to be any (comprehensible or straightforward) way of saying to tomcat that 
+		     rootX and rootY should both be handled by the same web application. This is
+		     tediously annoying (like so many things related to tomcat) since 
+		     I've just discovered that the radio is issuing requests to a different root
+		     URL to the one I originally observed. 
+		 -->
+		<root.url>portal-newformat</root.url>
 	</properties>
 
 	<dependencies>
@@ -45,7 +55,7 @@
 		</dependency>
    </dependencies>   
 	<build>
-		<finalName>portal</finalName>
+		<finalName>${root.url}</finalName>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
 			<plugins>
 				<plugin>
@@ -138,10 +148,22 @@
 							<type>${project.packaging}</type>
 							<overWrite>true</overWrite>
 							<outputDirectory>${tomcat.webapps}</outputDirectory>
-							<destFileName>portal.war</destFileName>
+							<!-- source filename is 'portal-newformat.war' but there is no way to
+							     get the plugin to keep the original name - it converts it to something
+							     ridiculous like 'recivaportal-tomcat-0.0.1-SNAPSHOT.war'. So the only choice
+							     is to try to reproduce the original name in the destFileName tag, unless
+							     I stumble across a way to get the source filename which it obviously knows
+							     Unbelievable, I've just wasted two hours trying to get this maven shirt to
+							     keep the original filename when it deploys the war file to the tomcat
+							     server and still haven't found a way - why the hell do they makes this
+							     shirt so difficult to use?
+							  -->
+							<destFileName>${project.build.finalName}.war</destFileName>
+
 						</artifactItem>
 					</artifactItems>
-					<outputDirectory>${tomcat.webapps}</outputDirectory>
+					<outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+					<!-- outputDirectory>${tomcat.webapps}</outputDirectory -->
 					<overWriteReleases>true</overWriteReleases>
 					<overWriteSnapshots>true</overWriteSnapshots>
 				</configuration>

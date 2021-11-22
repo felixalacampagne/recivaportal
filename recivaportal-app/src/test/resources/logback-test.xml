@@ -1,0 +1,18 @@
+<configuration debug="true" scan="true" scanPeriod="5 seconds">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level %logger{50}: %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <!-- Log debug info for my stuff to the log file -->
+  <logger name="com.felixalacampagne" level="debug" additivity="true">
+  </logger>
+
+  <root level="warn">
+    <appender-ref ref="STDOUT" />
+  </root>
+ 
+   
+
+</configuration>
