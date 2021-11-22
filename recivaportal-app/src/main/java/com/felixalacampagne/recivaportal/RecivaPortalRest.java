@@ -132,7 +132,7 @@ public class RecivaPortalRest
 //	   	payload = rph.makeFirstDataBlock(body);
 //	   	payload = body.getBytes();
 	   	
-	   	renc = new RecivaEncryption(rspauth, false);
+	   	renc = new RecivaEncryption(rspauth, true);
 	   	payload = renc.recivaDESencrypt(payload);
 	   	
 	   	ResponseBuilder responseBuilder = Response.status(200);
