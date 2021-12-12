@@ -78,6 +78,7 @@ public class RecivaPortalRest
    	Response response = null;
    	RecivaEncryption renc = null;
    	RecivaProtocolHandler rph = new RecivaProtocolHandler();
+   	String body = null;
    	try
    	{
 	   	String path = ui.getPath();
@@ -87,31 +88,28 @@ public class RecivaPortalRest
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
 	   	log.info("postSession: decryption key auth:" + auth);
+	   	
+	   	// Decrypt the request body - using the B64 auth to get the key
+			renc = new RecivaEncryption(auth, true);
+			byte [] messageBodyclear = renc.recivaDESdecrypt(messageBody);
+			int chksum = rph.getCheckSum(messageBodyclear, messageBodyclear.length-1);
+			log.info("postSession: decrypted request body:\n" + dumpBuffer(messageBodyclear));
+			log.info("postSession: checksum: expected: " + chksum + " actual: " + (messageBodyclear[messageBodyclear.length-1] & 0xFF));	   	
 //	   	Utils.dumpToFile("session_body_" + authstr + "_" + Utils.getTimestampFN() + ".dat", messageBody);
 
 	   	String rspauth;
-	   	// This didn't work
-//	   	// Use the challenge response as a lookup for the response encryption key
-//			renc = new RecivaEncryption(auth, true);
-//			byte [] messageBodyclear = renc.recivaDESdecrypt(messageBody);
-//			int chksum = rph.getCheckSum(messageBodyclear, messageBodyclear.length-1);
-//			log.info("postSession: checksum: expected: " + chksum + " actual: " + (messageBodyclear[messageBodyclear.length-1] & 0xFF));
-//	   	byte [] clgrsp = Arrays.copyOf(messageBodyclear, 8);
-//	   	
-//
-	   	// This also didn't work
-//	   	// Use the decrypt key as input to sernum to get encrypt key
-//	   	RecivaChallenge rcvclg = RecivaChallengeProvider.getChallenge(authstr);
-//	   	byte [] key = rcvclg.getKey();
-//	   	rspauth = Utils.encodeToHex(key);
-
-
-	   	// Challenge response as lookup doesn't work so revert to using the original auth
-	   	// This doesn't work either
+	   	// Numerous manipulations to get an encryption key have been tried - non result 
+	   	// in the radio being able to decrypt the response, eg.
+	   	//  - auth indicates the challenge response to use as encryption key - no
+	   	//  - auth indicates a challenge response to use to get the encryption key - no
+	   	//  - auth indicates the key to use - no
+	   	// For now stick with the last option.
+	     
 	   	rspauth = auth;
 	   	
-	   	
-	   	String body = logRequest(path, ui, headers);
+	   	// Use the challenge response as a lookup for the response encryption key
+
+//	   	byte [] clgrsp = Arrays.copyOf(messageBodyclear, 8);	   	
 //	   	body = "<stations><station id=\"2765\" custommenuid=\"0\"><version>5127</version>\r\n"
 //	      		+ "<data><stream id=\"2149\"><url>http://radios.argentina.fm:9270/stream</url>\r\n"
 //	      		+ "<title>La 2x4 Tango Buenos Aires</title>\r\n"

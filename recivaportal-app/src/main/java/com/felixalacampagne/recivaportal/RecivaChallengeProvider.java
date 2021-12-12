@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 public class RecivaChallengeProvider
 {
 	final static Logger log = LoggerFactory.getLogger(RecivaChallengeProvider.class);
-// This will need to be made into something which can provide a challenge by cycling through the array in order 
-// and wrapping back to the begining and also mapping a challenge into a key
+
 private static RecivaChallenge [] challenges = 
 {
+	//                  Challenge(auth)     ChallengeResponse   Key                 MacKey
 	new RecivaChallenge("3030303030303030", "aa084e55dea29a71", "7b3970508744e215", "f6d762cf35989dd4e4d069f804b1864f71323fc0412684ce"),
 	new RecivaChallenge("AA084E55DEA29A71", "7fc9710eefb973be", "c80c60752e847fc5", "7ba6acf9826f52c7bea51b6a3a3d0c0d45764abcc1528c27"),
 	new RecivaChallenge("7B3970508744E215", "21a05bec8d0f07ca", "fe04d40cc69e7831", "8d933a11c61b5e897c175d77ef46eb2f53703313a7890e7a"),
