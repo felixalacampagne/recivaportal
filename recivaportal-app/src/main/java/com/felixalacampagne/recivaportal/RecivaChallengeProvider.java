@@ -11,8 +11,8 @@ private static RecivaChallenge [] challenges =
 {
 	//                  Challenge(auth)     ChallengeResponse   Key                 MacKey
 	new RecivaChallenge("3030303030303030", "aa084e55dea29a71", "7b3970508744e215", "f6d762cf35989dd4e4d069f804b1864f71323fc0412684ce"),
-	new RecivaChallenge("AA084E55DEA29A71", "7fc9710eefb973be", "c80c60752e847fc5", "7ba6acf9826f52c7bea51b6a3a3d0c0d45764abcc1528c27"),
-	new RecivaChallenge("7B3970508744E215", "21a05bec8d0f07ca", "fe04d40cc69e7831", "8d933a11c61b5e897c175d77ef46eb2f53703313a7890e7a"),
+//	new RecivaChallenge("AA084E55DEA29A71", "7fc9710eefb973be", "c80c60752e847fc5", "7ba6acf9826f52c7bea51b6a3a3d0c0d45764abcc1528c27"),
+//	new RecivaChallenge("7B3970508744E215", "21a05bec8d0f07ca", "fe04d40cc69e7831", "8d933a11c61b5e897c175d77ef46eb2f53703313a7890e7a"),
 	
 	new RecivaChallenge("3030303030303031", "88d8578cb7a204b7", "8d9eb04092d51342", "5f1ac971ac7099c03840df9422777f687cffa599eaa5fc60"),
 	new RecivaChallenge("3030303030303032", "d313e883ce9b2b6b", "bf96d50aec6a1f06", "775ba72bbe158fbab9a6815a8598cc3d76e44654842685c7"),

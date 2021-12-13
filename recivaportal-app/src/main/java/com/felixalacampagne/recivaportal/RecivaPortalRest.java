@@ -87,13 +87,12 @@ public class RecivaPortalRest
 	   	log.info("postSession: auth:" + auth + " -> " + authstr);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
-	   	log.info("postSession: decryption key auth:" + auth);
+	   	log.info("postSession: request decryption key auth:" + auth);
 	   	
 	   	// Decrypt the request body - using the B64 auth to get the key
 			renc = new RecivaEncryption(auth, true);
 			byte [] messageBodyclear = renc.recivaDESdecrypt(messageBody);
 			int chksum = rph.getCheckSum(messageBodyclear, messageBodyclear.length-1);
-			log.info("postSession: decrypted request body:\n" + dumpBuffer(messageBodyclear));
 			log.info("postSession: checksum: expected: " + chksum + " actual: " + (messageBodyclear[messageBodyclear.length-1] & 0xFF));	   	
 //	   	Utils.dumpToFile("session_body_" + authstr + "_" + Utils.getTimestampFN() + ".dat", messageBody);
 

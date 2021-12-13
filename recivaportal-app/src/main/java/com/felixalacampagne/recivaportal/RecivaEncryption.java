@@ -36,13 +36,14 @@ private static final byte [] DESIV = { (byte)0xBD, (byte)0xE7, (byte)0x32, (byte
 private final IvParameterSpec ipsDesIV = new IvParameterSpec(DESIV);
 private final Key deskey;
 private final Cipher cipher;
-private RecivaChallenge rc = null;
+private final RecivaChallenge rc;
 
 	public RecivaEncryption(String b64orhexchallenge, boolean b64) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
 	{
 		String hexchallenge = b64orhexchallenge;
 		if(b64)
 		{
+	      log.debug("<init>: B64 challenge: " + b64orhexchallenge);
 			hexchallenge = Utils.base64ToString(b64orhexchallenge);
 		}
 		rc = RecivaChallengeProvider.getChallenge(hexchallenge);
@@ -57,6 +58,7 @@ private RecivaChallenge rc = null;
 	{
 		cipher = Cipher.getInstance(DES_TRANSFORM);
 		deskey = new SecretKeySpec(key, DES_ALGORITHM);
+		rc = null;
 	
 	}
 
@@ -84,7 +86,7 @@ private RecivaChallenge rc = null;
 	{
 		cipher.init(Cipher.DECRYPT_MODE, deskey, ipsDesIV);
 		byte[] clearbytes = this.cipher.doFinal(encbytes);
-		log.debug("recivaDESencrypt: decrypted data block:\n" + dumpBuffer(clearbytes));
+		log.debug("recivaDESdecrypt: decrypted data block:\n" + dumpBuffer(clearbytes));
 		return clearbytes;
 	}
 }

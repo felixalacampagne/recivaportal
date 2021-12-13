@@ -123,7 +123,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 	public int getCheckSum(byte[] type1, int len)
 	{
 		long sum = 0; // -10;
-		log.info("getCheckSum: starting with seed: " + String.format("%08x", sum));
+//		log.info("getCheckSum: starting with seed: " + String.format("%08x", sum));
 		long ubyte = 0;
 		for(int i=0; i < len; i++)
 		{
