@@ -84,10 +84,9 @@ public class RecivaPortalRest
 	   	String path = ui.getPath();
 	   	String authstr = Utils.base64ToString(auth); 
 	   	log.info("postSession: request path: " + path);
-	   	log.info("postSession: auth:" + auth + " -> " + authstr);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
-	   	log.info("postSession: request decryption key auth:" + auth);
+         log.info("postSession: request decryption key auth:" + auth + " -> " + authstr);
 	   	
 	   	// Decrypt the request body - using the B64 auth to get the key
 			renc = new RecivaEncryption(auth, true);
