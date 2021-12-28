@@ -48,8 +48,21 @@ public byte[] getChallengeResponse()
 	return Utils.decodeHexString(challengeResponse);
 }
 
+public String getHexChallengeResponse()
+{
+   return challengeResponse;
+}
+
 public byte[] getMackey()
 {
 	return Utils.decodeHexString(mackey);
 }
+
+public String toString()
+{
+   return "challenge: 0x" + getHexChallenge() 
+      + " key: 0x" + getKeyHex() 
+      + " challenge response: 0x" + getHexChallengeResponse();
+}
+
 }

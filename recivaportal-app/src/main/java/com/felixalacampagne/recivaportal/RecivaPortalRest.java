@@ -69,7 +69,7 @@ public class RecivaPortalRest
    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
    public Response postSession( 
    		@QueryParam("serial") String serial,
-   		@QueryParam("auth") String auth,   // Looks like Base64
+   		@QueryParam("auth") String authB64,   // Looks like Base64
    		@QueryParam("sp") String sp,
    		@Context UriInfo ui,  
    		@Context HttpHeaders headers,
@@ -82,14 +82,14 @@ public class RecivaPortalRest
    	try
    	{
 	   	String path = ui.getPath();
-	   	String authstr = Utils.base64ToString(auth); 
+	   	String authstr = Utils.base64ToString(authB64); 
 	   	log.info("postSession: request path: " + path);
 	   	log.info("postSession: request body length: " + messageBody.length);
 	   	log.info("postSession: request body:\n" + dumpBuffer(messageBody));
-         log.info("postSession: request decryption key auth:" + auth + " -> " + authstr);
+         log.info("postSession: request auth(cHallenge):" + authB64 + " -> " + authstr);
 	   	
 	   	// Decrypt the request body - using the B64 auth to get the key
-			renc = new RecivaEncryption(auth, true);
+			renc = new RecivaEncryption(authB64, true);
 			byte [] messageBodyclear = renc.recivaDESdecrypt(messageBody);
 			int chksum = rph.getCheckSum(messageBodyclear, messageBodyclear.length-1);
 			log.info("postSession: checksum: expected: " + chksum + " actual: " + (messageBodyclear[messageBodyclear.length-1] & 0xFF));	   	
@@ -103,7 +103,7 @@ public class RecivaPortalRest
 	   	//  - auth indicates the key to use - no
 	   	// For now stick with the last option.
 	     
-	   	rspauth = auth;
+	   	rspauth = authB64;
 	   	
 	   	// Use the challenge response as a lookup for the response encryption key
 
@@ -119,14 +119,12 @@ public class RecivaPortalRest
 //	      		+ "<genres>23</genres>\r\n"
 //	      		+ "<locations>34</locations>\r\n"
 //	      		+ "</station></stations>";
-	   	body =  "0123456789ABCDEF"; // "<stations></stations>";
+	   	body = "89ABCDEF"; // "0123456789ABCDEF"; // "<stations></stations>";
  	   	
 	   	
 	   	log.info("postSession: session response encryption key auth:" + rspauth);
 	   	byte [] payload; 
 	   	payload = rph.makeSessionResponse(body); 
-//	   	payload = rph.makeFirstDataBlock(body);
-//	   	payload = body.getBytes();
 	   	
 	   	renc = new RecivaEncryption(rspauth, true);
 	   	payload = renc.recivaDESencrypt(payload);
@@ -152,8 +150,6 @@ public class RecivaPortalRest
 	      response = responseBuilder.build();
 	      log.debug("postSession: response status: " + response.getStatusInfo().getStatusCode() + " " + response.getStatusInfo().getReasonPhrase());
 	      log.debug("postSession: response header:\n" + getMultivaluedMapString(response.getStringHeaders()));    
-	      
-	      return response;
    	}
    	catch(Exception e)
    	{
@@ -217,7 +213,8 @@ public class RecivaPortalRest
    
    private Response makeChallengeResponse(boolean bHead, String entity)
    {
-      byte [] challenge = RecivaChallengeProvider.getNextChallenge().getChallenge(); // "00000000"; // Use 3030303030303030 for sread
+      RecivaChallenge rc = RecivaChallengeProvider.getNextChallenge();
+      byte [] challenge = rc.getChallenge();
 
       Calendar cal = Calendar.getInstance();
       Response response;
@@ -237,9 +234,9 @@ public class RecivaPortalRest
       responseBuilder.type(MediaType.TEXT_PLAIN_TYPE);
       responseBuilder.header("X-Reciva-Challenge-Format", "sernum");
       // x-reciva-session-id
-      responseBuilder.header("X-Reciva-Session-Id", new String(challenge));  // Assume it consists of printable characters
+      responseBuilder.header("X-CPA-Auth", rc.getHexChallenge());
       // reciva-token
-      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal-newformt");
+      responseBuilder.header("Set-Cookie", "JSESSIONID=ABCD1234ABCD1234; Path=/portal-newformat");
       if(!bHead)
       {
       	responseBuilder.entity(challenge);

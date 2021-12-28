@@ -29,7 +29,7 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 //	For DES: \xbd\xe7\x32\x66\xb9\x46\xf3\xab
 //	For 3DES: \xed\x9e\xa8\x97\x7c\xee\xc8\xac
 private static final String DES_ALGORITHM = "DES";
-private static final String DES_TRANSFORM = "DES/CBC/NoPadding"; // Transform makes no difference to the size fo the encrypted data "DES/ECB/PKCS5Padding";
+private static final String DES_TRANSFORM = "DES/CBC/NoPadding"; // Trasnsform should not change the size of the data block 
 
 private static final byte [] DESIV = { (byte)0xBD, (byte)0xE7, (byte)0x32, (byte)0x66, 
 		                                 (byte)0xb9, (byte)0x46, (byte)0xF3, (byte)0xAB };
@@ -48,7 +48,7 @@ private final RecivaChallenge rc;
 		}
 		rc = RecivaChallengeProvider.getChallenge(hexchallenge);
 		byte [] key = rc.getKey();
-		log.debug("<init>: challenge: " + hexchallenge + " key: " + rc.getKeyHex());
+		log.debug("<init>: " + rc);
 		cipher = Cipher.getInstance(DES_TRANSFORM);
 		deskey = new SecretKeySpec(key, DES_ALGORITHM);
 	
@@ -71,7 +71,7 @@ private final RecivaChallenge rc;
 		return encbytes;
 	}
 
-	// Encrypts using the challenge response instead of the key - only for testing
+	// Encrypts using the "challenge response" instead of the key - only for testing
 	public byte[] recivaDESCRencrypt(byte [] clearbytes) throws GeneralSecurityException
 	{
 		Key crdeskey = new SecretKeySpec(rc.getChallengeResponse(), DES_ALGORITHM);
