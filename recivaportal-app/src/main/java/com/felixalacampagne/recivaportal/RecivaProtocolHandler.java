@@ -77,10 +77,6 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 	// Try with just the payload, eg. 32byte session key, padding and checksum
 	public byte [] makeSessionResponse(String payload)
 	{
-		byte [] sessionblock = new byte[256]; 
-		// check sum byte is sessionblock[255], 
-		// max null byte is sessionblock[254],
-		// max payload byte is sessionblock[253] 
 		byte[] paybytes;
 		try
 		{
@@ -91,6 +87,17 @@ final Logger log = LoggerFactory.getLogger(this.getClass());
 			// This is a stupid exception that will never happen as UTF-8 is builtin!
 			paybytes = payload.getBytes();
 		}
+		return makeSessionResponse(paybytes);
+	}
+	
+	public byte [] makeSessionResponse(byte[] paybytes)
+	{
+		byte [] sessionblock = new byte[256]; 
+		// check sum byte is sessionblock[255], 
+		// max null byte is sessionblock[254],
+		// max payload byte is sessionblock[253] 
+		;
+
 		int len = paybytes.length;
 		int i = 0;
 		int maxlen = sessionblock.length-2; // 254 Allows for nul terminator and checksum byte

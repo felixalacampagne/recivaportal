@@ -89,4 +89,9 @@ private final RecivaChallenge rc;
 		log.debug("recivaDESdecrypt: decrypted data block:\n" + dumpBuffer(clearbytes));
 		return clearbytes;
 	}
+	
+	public RecivaChallenge getRecivaChallenge()
+	{
+		return rc;
+	}
 }

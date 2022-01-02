@@ -78,7 +78,7 @@ public class RecivaPortalRest
    	Response response = null;
    	RecivaEncryption renc = null;
    	RecivaProtocolHandler rph = new RecivaProtocolHandler();
-   	String body = null;
+   	
    	try
    	{
 	   	String path = ui.getPath();
@@ -104,7 +104,7 @@ public class RecivaPortalRest
 	   	// For now stick with the last option.
 	     
 	   	rspauth = authB64;
-	   	
+	   	renc = new RecivaEncryption(rspauth, true);
 	   	// Use the challenge response as a lookup for the response encryption key
 
 //	   	byte [] clgrsp = Arrays.copyOf(messageBodyclear, 8);	   	
@@ -119,14 +119,18 @@ public class RecivaPortalRest
 //	      		+ "<genres>23</genres>\r\n"
 //	      		+ "<locations>34</locations>\r\n"
 //	      		+ "</station></stations>";
-	   	body = "89ABCDEF"; // "0123456789ABCDEF"; // "<stations></stations>";
- 	   	
+	   	// bodies tried:
+	   	//   16bytes random "0123456789ABCDEF
+	   	//    8bytes random "89ABCDEF"
+	   	//   MAC key related to challenge
+//	   	String body = null;
+//	   	body = "89ABCDEF"; // "0123456789ABCDEF"; // "<stations></stations>";
+ 	   	byte[] body = renc.getRecivaChallenge().getMackey();
 	   	
-	   	log.info("postSession: session response encryption key auth:" + rspauth);
 	   	byte [] payload; 
 	   	payload = rph.makeSessionResponse(body); 
 	   	
-	   	renc = new RecivaEncryption(rspauth, true);
+	   	
 	   	payload = renc.recivaDESencrypt(payload);
 	   	
 	   	ResponseBuilder responseBuilder = Response.status(200);
