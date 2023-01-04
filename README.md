@@ -11,6 +11,11 @@ The aim of this project is to get the alarm to play the selected preset/stream e
 I was hoping that the greedy barstewards responsible for switching off the reciva servers would have at least made the reciva server code open source so owners of radios which rely on the reciva server could either set up a local server or maybe fund a public one in order to keep their very expensive and still functioning hardware alive. If the barstewards thought that pulling the plug on the server would boost their internet radio sales then I hope the world proves them wrong - who in their right mind would waste another huge chunk of cash on something that can be rendered useless at the flick of a switch... hmm, actually that sounds sort of like an iPhone user...
 
 ## The story so far
+
+25-Dec-2021 Recieved a Philips internet radio for Christmas (partner was fed up with waking up to the 'beeps' and me cursing the 
+Reciva barstewards). This project is therefore abandoned, until something similar happens to whatever Reciva equivalent Philps is using ceases to function,
+which will hopefully be long after I need an alarm to wake me up at some ungodly hour in the morning.
+
 06-Nov-2021 Tried a few more things to try to get the radio to accept the session response.  
  - encryption key using decrypt key as sernum input to get encrypt key
  - encryption key using challenge response as sernum input to get key, session key in 256 file tfr block - no good
