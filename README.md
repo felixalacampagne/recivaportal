@@ -12,7 +12,7 @@ I was hoping that the greedy barstewards responsible for switching off the reciv
 
 ## The story so far
 
-25-Dec-2021 Recieved a Philips internet radio for Christmas (partner was fed up with waking up to the 'beeps' and me cursing the 
+25-Dec-2021 Recieved a Philips TAPR802 internet radio for Christmas (partner was fed up with waking up to the 'beeps' and me cursing the 
 Reciva barstewards). This project is therefore abandoned, until something similar happens to whatever Reciva equivalent Philps is using ceases to function,
 which will hopefully be long after I need an alarm to wake me up at some ungodly hour in the morning.
 
@@ -60,9 +60,12 @@ I was surprised to see that the constant stream of "HEAD /portal" requests had s
 So the name of the war file now needs to be 'portal-newformat' and we'll see what happens now.  
 Not really sure why the requests changed but I guess it must be related to the change of DNS server I made last weekend as this corresponds with the change of request. I wanted a DNS server to serve local addresses to the VPN clients which 'deadwood' was not suited to so I installed a 'Technitium' DNS server instead. Maybe there is difference in the response to the lookup requests from the radio - I'm sure I don' have a clue. But now that the server actually receives GET requests I can experiment with responses and the chances of getting it to work have improved a little.  
 Now I see a 'POST' request...  
+
 10-Oct-2021 Just discovered from here 'https://www.bbc.co.uk/blogs/internet/entries/481e7233-0aea-4b15-8ace-878ce549108c' that the streams used by the radio are likely to stop working soon, or be changed to an incompatible format, ie. HTTPS using TLS. If this is the case it would appear to be futile to spend any more time on this project...   
+
 09-Oct-2021 many hours later finally got it to work. I have no idea which of the pieces of magic actually persuaded tomcat to start using the reciva portal REST api again but it is currently working. Unfortunately it is not sharing the REST api with the Jetty version as I copied the class into the tomcat project. The Jetty project appeared to require Java 11 but when I compile the tomcat code using Java 11 the tomcat installation complains about this 52 vs. 55 shirt. Making the project a 1.8 project in Eclipse fixes this problem - no clue why the Eclipse java version should change things when it is supposed to be using the nonsense in the master pom.xml for maven-compiler-plugin where it says release=11 which is supposed to mean it generates the code using Java 11. So I guess the next step is to figure out how to make a version of the shared class which is compile with Java 1.8 for the tomcat version and Java 11 for the jetty version.... Or I can forget about the jetty version for the moment as it did not appear to solve the problem of radio not sending any actual GET requests!  
 09-Oct-2021 the tomcat version builds and deploys without error (usually, the maven building keeps throwing random errors which resolve themselves when the exact same command is repeated moments later). Tomcat then reports 404 for all portal URLs which should be handled by the REST class - index.jsp and the sharpfin URLs work fine. I have absolutely no clue why this is. It does not appear to be related to having the REST in a different JAR because I added the class to the Tomcat source and it still behaves the same. Another example of how the modern tools really go out of their way to FORK YOU OVER good and proper. Another wasted morning trying to get something working which was working before and now inexplicably does not. Magic at its wonderous best. Eclipse doesn't help as it keeps displaying completely random errors for things that are not there: the latest is 'Element type "dependency" must be followed by either attribute specifications, ">" or "/>".' for the line 68 of the tomcat pom - the forking element is followed by a '>'.
+
 08-Oct-2021 Spent a fascinating few hours trying to get rid of the red flags in Eclipse. This maven shirt is really good
 for wasting hours and hours of time and combine it with Eclipse and its days and days of wasted time. From the faceted version of something doesn't match with something else (every place a something is specified it matches the other somethings), file can't
 be nested even though they are directories and having sub-directories is sort of why they exist. The best thing is how the solution to everyone of these inscrutable messages generates at least two additional messages which take inscrutablitly to an even higher level. I do think I managed to get things set up now so I can build just the jetty version or just the tomcat version. Will probably require a change to the master pom to switch between the two but hey, it's good enough for me.  
@@ -71,9 +74,12 @@ which of course makes no sense since it refers to a JSP page in the tomcat proje
 I do seem to have lost the comments regarding why I needed to make a jetty version, I guess that's one of the side-effects of using
 the modern tools - they couldn't give a shirt about whether your time consuming hard work is irretrievably lost every now and then, after all its bound to be better the second/third time around.  
 The reason for Jetty was... I noticed in the reciva logs that the HTTP response status from tomcat was appearing as "200 200" whereas the reponse from the upnp servers had "200 OK". The reciva logs also state "OPSEL:Unknown result code: 200" [yippee: I found the comments! They are in the code, so, not the modern tools... this time] and it crossed my mind that maybe reciva is actually looking for the "OK" instead of the numeric code. I figured it must be a trivial change to fix tomcat so it sent what I was supplying in the code as the status response... boy, I was so wrong! Long and short, tomcat developers are having a big laugh at the thought of all the hardware they have helped to render obsolete by blocking any way to send the status code required by the hardcoded, unmodifiable clients which check the status text instead of the code. The simple test (I thought) to see if sending "OK" would get me a GET request turned out to be something of a nightmare. But anyway, I can now build the recivaportal as a standalone application with an embedded Jetty server (I don't think it can serve the static pages, though). Alas giving the radio the "OK" status text still did not get me a GET request so back to the drawing board I go - completely devoid of any ideas as to what to try next.  
+
 06-Oct-2021 Split into three projects so I could make a Jetty version. No clue if it builds yet.  
+
 02-Oct-2021 Tried response status codes between 1 and 999. Radio still reports unknown status code so I guess there must
 be something else going on but haven't got a clue what it could be.  
+
 28-Sep-2021 Messed around with the debug log configuration on the radio. The only clue gleaned is that the radio is possibly looking for a different HTTP return code than the normal 200-OK.  
 Alternative codes might be;
 - 203 No Content-possibly applicable to the HEAD request
@@ -86,6 +92,7 @@ to work OK. For now I'm out of ideas as to what to do...
 Added some of the modified sharpfin and related files to the server. The FTP on the radio does not work well with any of the FTP
 clients I've tried (MS FTP, FileZilla, Mobaxterm) - it seems not to support getting a directory list - so the only way to get
 files onto the radio is to use something like WGET so need the files on a webserver.
+
 20-Sep-2021 Examined a dump of the /root/ir binary and updated the headers based on some of the strings I saw there. I
 finally saw a GET request! I guess the response was not to the radios liking as I saw no other requests. No real idea
 what the 'challenge' response should contain, maybe it expects the list of stations immediately. Did notice that turning the
@@ -301,7 +308,7 @@ The GET request which never comes
 
     curl -v --get "http://portal15.7803986842.com/portal/challenge?serial=0000df34&sp=v257-a-865-a-476"
 
-Saw this the site talking about decrypting the traffic between the radio and the reciva server  
+Saw this on the site talking about decrypting the traffic between the radio and the reciva server  
 
     curl reciva://copper.reciva.com:6000/service-pack/sp255-c-106.bin
 
@@ -342,10 +349,10 @@ $CATALINA_HOME\conf\Catalina\localhost with the following content:
 <Context docBase="../deploy/ExampleApp.war"/>
 Two points are worth nothing here.
 
-First, we don't have to specify the path explicitly as in the previous option � 
+First, we don't have to specify the path explicitly as in the previous option,
 Tomcat derives that from the name of our ROOT.xml.
 
-And second � since we're defining our context in a different file than the server.xml, 
+And second, since we're defining our context in a different file than the server.xml, 
 our docBase has to be outside of $CATALINA_HOME\webApps.
 
 It doesn't really mention whether autodeploy actually works with this...
