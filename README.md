@@ -1,4 +1,4 @@
-# recivaportal
+# recivaportal - archived (WM201 sent to the landfill)
 ## Introduction
 Attempt at a fake reciva portal to resurrect my perfectly functioning Roberts Radio WM201 which has been bricked by the closure of the reciva.com portal.
 
